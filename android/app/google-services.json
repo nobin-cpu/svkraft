@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "855538089679",
+    "firebase_url": "https://svkraft-401b2-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "svkraft-401b2",
+    "storage_bucket": "svkraft-401b2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:855538089679:android:6a25b63f19a5afa43001ba",
+        "android_client_info": {
+          "package_name": "com.svkraft.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "855538089679-m7bpfgore03ms9mubr9me5ljj753aid8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6chN0vo7BLzjHfqNs1-cZY3v5FsfUZXY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "855538089679-m7bpfgore03ms9mubr9me5ljj753aid8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
