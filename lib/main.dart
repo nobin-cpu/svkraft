@@ -68,12 +68,12 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  getToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('auth-token');
-    print(token);
-    return token;
-  }
+  // getToken() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   String? token = prefs.getString('auth-token');
+  //   print(token);
+  //   return token;
+  // }
 
   // This widget is the root of your application.
   @override
