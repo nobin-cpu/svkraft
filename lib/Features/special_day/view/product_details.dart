@@ -2,10 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:arabic_numbers/arabic_numbers.dart';
+import 'package:badges/badges.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sv_craft/Features/cart/controllar/addtocart_con.dart';
@@ -13,16 +14,19 @@ import 'package:sv_craft/Features/cart/view/cart_screen.dart';
 import 'package:sv_craft/Features/home/controller/home_controller.dart';
 import 'package:sv_craft/Features/home/home_screen.dart';
 import 'package:sv_craft/Features/market_place/controller/all_product_controller.dart';
+import 'package:sv_craft/Features/market_place/view/reportuser.dart';
 import 'package:sv_craft/Features/profile/view/profile_screen.dart';
 import 'package:sv_craft/Features/seller_profile/view/conto.dart';
 import 'package:sv_craft/Features/special_day/controllar/special_details_pro_con.dart';
 import 'package:sv_craft/Features/special_day/model/special_pro_detals_m.dart';
 import 'package:sv_craft/Features/special_day/view/special_home_screen.dart';
-import 'package:sv_craft/Features/special_day/view/widgets/special_drawer.dart';
+
 import 'package:sv_craft/constant/api_link.dart';
 import 'package:sv_craft/constant/color.dart';
 import 'package:http/http.dart' as http;
 import 'package:sv_craft/constant/shimmer_effects.dart';
+
+import '../../grocery/controllar/cart_count.dart';
 
 class ProductDetails extends StatefulWidget {
   const ProductDetails({
@@ -37,6 +41,7 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
+  Cartcontrollerofnav _cartControllers = Get.put(Cartcontrollerofnav());
   final arabicNumber = ArabicNumbers();
   final SpecialDetailsProductController _specialDetailsProductController =
       Get.put(SpecialDetailsProductController());
@@ -74,10 +79,89 @@ class _ProductDetailsState extends State<ProductDetails> {
   }
 
   Future? specialrelat;
+  Future carts() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('auth-token');
 
+    Map<String, String> requestHeaders = {
+      'Accept': 'application/json',
+      'authorization': "Bearer $token"
+    };
+
+    var response =
+        await http.get(Uri.parse(Appurl.cartitem), headers: requestHeaders);
+    if (response.statusCode == 200) {
+      print('Get post collected' + response.body);
+      var userData10 = jsonDecode(response.body)['count'];
+
+      return userData10;
+    } else {
+      print("post have no Data${response.body}");
+    }
+  }
+
+  Future reportuser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('auth-token');
+
+    Map<String, String> requestHeaders = {
+      'Accept': 'application/json',
+      'authorization': "Bearer $token"
+    };
+    var request = await http.MultipartRequest(
+      'POST',
+      Uri.parse(Appurl.reportuser),
+    );
+    request.fields.addAll({
+      'userId': widget.id.toString(),
+      'message': officer.toString(),
+    });
+
+    // if (_image != null) {
+    //   request.files
+    //       .add(await http.MultipartFile.fromPath('attached_file', _image.path));
+    // }
+
+    request.headers.addAll(requestHeaders);
+
+    request.send().then((result) async {
+      http.Response.fromStream(result).then((response) {
+        if (response.statusCode == 200) {
+          var data = jsonDecode(response.body);
+
+          // saveprefs(data["data"]["bearer_token"]);
+          // chat.clear();
+
+          setState(() {});
+          Get.to(HomeScreen());
+        } else {
+          print("Fail! ");
+          print(response.body.toString());
+          // Fluttertoast.showToast(
+          //     msg: "Error Occured",
+          //     toastLength: Toast.LENGTH_LONG,
+          //     gravity: ToastGravity.BOTTOM,
+          //     timeInSecForIosWeb: 1,
+          //     backgroundColor: Colors.red,
+          //     textColor: Colors.white,
+          //     fontSize: 16.0);
+          return response.body;
+        }
+      });
+    });
+  }
+
+  saveprefs(String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('auth-token', token);
+  }
+
+  String officer = 'Violent content';
+  Future? cartcount;
   @override
   void initState() {
     super.initState();
+    cartcount = carts();
     specialrelat = viewspecialrelated();
     Future.delayed(Duration.zero, () async {
       setTokenToVariable();
@@ -147,11 +231,157 @@ class _ProductDetailsState extends State<ProductDetails> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(data.name,
-                                  style: TextStyle(
-                                      color: Colors.black87,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold)),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(data.name,
+                                      style: TextStyle(
+                                          color: Colors.black87,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold)),
+                                  InkWell(
+                                    onTap: () async {
+                                      showDialog(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Column(
+                                                children: [
+                                                  Text("Report this user".tr),
+                                                  Padding(
+                                                    padding: EdgeInsets.all(15),
+                                                    child: Text(
+                                                        "Select a reason below to report"
+                                                            .tr),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 6,
+                                                            horizontal: 15),
+                                                    child: SizedBox(
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              .07,
+                                                      width: double.infinity,
+                                                      child:
+                                                          DropdownButtonFormField(
+                                                        decoration:
+                                                            InputDecoration(
+                                                          fillColor:
+                                                              Colors.white,
+                                                          contentPadding:
+                                                              EdgeInsets.all(
+                                                                  10),
+                                                          filled: true,
+                                                          border:
+                                                              OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            10)),
+                                                          ),
+                                                          labelText:
+                                                              'Select a reason',
+                                                          hintText:
+                                                              'Choose Officer',
+                                                        ),
+                                                        dropdownColor:
+                                                            Color.fromARGB(255,
+                                                                255, 255, 255),
+                                                        value: officer,
+                                                        onChanged:
+                                                            (String? newValue) {
+                                                          setState(() {
+                                                            officer = newValue!;
+                                                          });
+                                                        },
+                                                        items: <String>[
+                                                          'Violent content',
+                                                          'Abbusive language',
+                                                          'potential violence',
+                                                          'Others'
+                                                        ].map<
+                                                            DropdownMenuItem<
+                                                                String>>((String
+                                                            value) {
+                                                          return DropdownMenuItem<
+                                                              String>(
+                                                            value: value,
+                                                            child: Text(
+                                                              value,
+                                                              style: TextStyle(
+                                                                  fontSize: 18),
+                                                            ),
+                                                          );
+                                                        }).toList(),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              // content:
+                                              // Text(
+                                              //     "Are you sure you want to report this user?"
+                                              //         .tr),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  child: Text("YES".tr),
+                                                  onPressed: () {
+                                                    // Get.to(() => Reportuser(
+                                                    //       id: widget.sellerId != null
+                                                    //           ? widget.sellerId.toString()
+                                                    //           : "0",
+                                                    //     ));
+                                                    reportuser();
+                                                  },
+                                                ),
+                                                TextButton(
+                                                  child: Text("NO".tr),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                )
+                                              ],
+                                            );
+                                          });
+                                    },
+                                    child: Container(
+                                      height: size.height * .05,
+                                      width: size.width * .23,
+                                      decoration: BoxDecoration(
+                                          color: Color.fromARGB(255, 255, 0, 0),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Center(
+                                          child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Icon(
+                                            Icons.report,
+                                            color: Colors.white,
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text(
+                                            "Report".tr,
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          )
+                                        ],
+                                      )),
+                                    ),
+                                  ),
+                                ],
+                              ),
                               SizedBox(
                                 height: size.height * .01,
                               ),
@@ -307,8 +537,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 children: [
                                   Text(
                                       "Total".tr +
-                                          arabicNumber
-                                              .convert(totalPrice.toString()) +
+                                          arabicNumber.convert(int.parse(
+                                              totalPrice.toString())) +
                                           "kr".tr,
                                       style: TextStyle(
                                           color: Colors.black87,
@@ -320,6 +550,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   InkWell(
                                     onTap: () async {
                                       if (count > 0) {
+                                        _cartControllers.onInit();
                                         var addResponce =
                                             await _addToCartController
                                                 .addTocart(
@@ -529,8 +760,19 @@ class _ProductDetailsState extends State<ProductDetails> {
               activeColor: Colors.white,
             ),
             BottomNavyBarItem(
-                icon: Icon(Icons.shopping_cart),
-                title: Text('Cart'.tr),
+                icon: Obx(
+                  () => Badge(
+                    position: BadgePosition.topEnd(),
+                    badgeContent: Container(
+                      child: Text(
+                        _cartControllers.count.value.toString(),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    child: Icon(Icons.shopping_cart_outlined),
+                  ),
+                ),
+                title: Text("Cart Screen".tr),
                 activeColor: Colors.white),
             BottomNavyBarItem(
                 icon: Icon(Icons.favorite),

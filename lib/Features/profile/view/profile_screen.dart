@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:arabic_numbers/arabic_numbers.dart';
+import 'package:badges/badges.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,9 +22,8 @@ import 'package:sv_craft/constant/api_link.dart';
 import 'package:sv_craft/constant/color.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constant/shimmer_effects.dart';
-import '../../../main.dart';
+import '../../grocery/controllar/cart_count.dart';
 import 'coin_redeam_page.dart';
-import 'coinpage.dart';
 import 'package:http/http.dart' as http;
 
 class ProfileScreen extends StatefulWidget {
@@ -35,6 +35,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  Cartcontrollerofnav _cartControllers = Get.put(Cartcontrollerofnav());
   var title = "";
   TextEditingController titlecontroller = TextEditingController();
   TextEditingController smscontroller = TextEditingController();
@@ -99,9 +100,78 @@ class _ProfileScreenState extends State<ProfileScreen> {
     prefs.setString('auth-token', token);
   }
 
+  Future destroy() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    await prefs.remove('auth-token');
+    await prefs.remove('user-id');
+
+    Map<String, String> requestHeaders = {
+      'Accept': 'application/json',
+      'authorization': "Bearer $token"
+    };
+    var request = await http.MultipartRequest(
+      'POST',
+      Uri.parse(Appurl.deleteaccount),
+    );
+    // request.fields.addAll({
+    //   'otp': pin,
+    //   'phone': widget.number,
+    // });
+
+    // if (_image != null) {
+    //   request.files
+    //       .add(await http.MultipartFile.fromPath('attached_file', _image.path));
+    // }
+
+    request.headers.addAll(requestHeaders);
+
+    request.send().then((result) async {
+      http.Response.fromStream(result).then((response) {
+        if (response.statusCode == 200) {
+          var data = jsonDecode(response.body);
+          print("massge sent");
+
+          // chat.clear();
+          Get.to(SigninScreen());
+          setState(() {});
+        } else {
+          print("Fail! ");
+
+          print(response.body.toString());
+
+          return response.body;
+        }
+      });
+    });
+  }
+
+  Future carts() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('auth-token');
+
+    Map<String, String> requestHeaders = {
+      'Accept': 'application/json',
+      'authorization': "Bearer $token"
+    };
+
+    var response =
+        await http.get(Uri.parse(Appurl.cartitem), headers: requestHeaders);
+    if (response.statusCode == 200) {
+      print('Get post collected' + response.body);
+      var userData10 = jsonDecode(response.body)['count'];
+
+      return userData10;
+    } else {
+      print("post have no Data${response.body}");
+    }
+  }
+
+  Future? cartcount;
   @override
   void initState() {
     super.initState();
+    cartcount = carts();
     getProfileController.getUserProfile(token);
   }
 
@@ -278,7 +348,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                               Container(
                                   height:
-                                      MediaQuery.of(context).size.height * .50,
+                                      MediaQuery.of(context).size.height * .6,
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 16, vertical: 16),
                                   decoration: BoxDecoration(
@@ -703,6 +773,169 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               ),
                                             ),
                                             GestureDetector(
+                                              onTap: () {
+                                                Get.to(MyProfileScreen(
+                                                    userProfileModel:
+                                                        getProfileController
+                                                            .userProfileModel
+                                                            .value));
+                                              },
+                                              child: InkWell(
+                                                onTap: () {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return AlertDialog(
+                                                          backgroundColor:
+                                                              Color(0xff004d95),
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        30),
+                                                          ),
+                                                          content:
+                                                              SingleChildScrollView(
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(10),
+                                                              child: Container(
+                                                                height: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .height *
+                                                                    .25,
+                                                                child: Column(
+                                                                    children: [
+                                                                      Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.all(8.0),
+                                                                        child:
+                                                                            Text(
+                                                                          "Are you sure you wants to delete your account?"
+                                                                              .tr,
+                                                                          style: TextStyle(
+                                                                              color: Colors.white,
+                                                                              fontWeight: FontWeight.bold),
+                                                                        ),
+                                                                      ),
+                                                                      Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.spaceAround,
+                                                                        children: [
+                                                                          Padding(
+                                                                            padding:
+                                                                                EdgeInsets.only(top: MediaQuery.of(context).size.height * .02),
+                                                                            child:
+                                                                                InkWell(
+                                                                              onTap: () {
+                                                                                destroy();
+                                                                              },
+                                                                              child: Container(
+                                                                                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                                                                                  height: MediaQuery.of(context).size.height * .06,
+                                                                                  width: MediaQuery.of(context).size.height * .1,
+                                                                                  child: Padding(
+                                                                                    padding: EdgeInsets.all(7),
+                                                                                    child: Row(
+                                                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                                                      children: [
+                                                                                        Text(
+                                                                                          "YES".tr,
+                                                                                          style: TextStyle(color: Color(0xff004d95), fontWeight: FontWeight.bold),
+                                                                                        )
+                                                                                      ],
+                                                                                    ),
+                                                                                  )),
+                                                                            ),
+                                                                          ),
+                                                                          Padding(
+                                                                            padding:
+                                                                                EdgeInsets.only(top: MediaQuery.of(context).size.height * .02),
+                                                                            child:
+                                                                                InkWell(
+                                                                              onTap: () {
+                                                                                Get.back();
+                                                                              },
+                                                                              child: Container(
+                                                                                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                                                                                  height: MediaQuery.of(context).size.height * .06,
+                                                                                  width: MediaQuery.of(context).size.height * .08,
+                                                                                  child: Padding(
+                                                                                    padding: EdgeInsets.all(0),
+                                                                                    child: Row(
+                                                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                                                      children: [
+                                                                                        SizedBox(
+                                                                                          width: 10,
+                                                                                        ),
+                                                                                        Text(
+                                                                                          "NO".tr,
+                                                                                          style: TextStyle(color: Color(0xff004d95), fontWeight: FontWeight.bold),
+                                                                                        )
+                                                                                      ],
+                                                                                    ),
+                                                                                  )),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      )
+                                                                    ]),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      });
+                                                },
+                                                child: Row(
+                                                  children: [
+                                                    SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              .05,
+                                                    ),
+                                                    Icon(
+                                                      Icons.delete_forever,
+                                                      color: Color.fromARGB(
+                                                          255, 0, 107, 194),
+                                                      size: 23,
+                                                    ),
+                                                    SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              .10,
+                                                    ),
+                                                    Text(
+                                                      "Delete Account".tr,
+                                                      style: TextStyle(
+                                                          fontSize: 18),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                  top: 20, bottom: 20),
+                                              child: Container(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    .001,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    .98,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                            GestureDetector(
                                               onTap: () async {
                                                 SharedPreferences prefs =
                                                     await SharedPreferences
@@ -821,8 +1054,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
               activeColor: Colors.white,
             ),
             BottomNavyBarItem(
-                icon: Icon(Icons.shopping_cart),
-                title: Text('Cart'),
+                icon: Obx(
+                  () => Badge(
+                    position: BadgePosition.topEnd(),
+                    badgeContent: Container(
+                      child: Text(
+                        _cartControllers.count.value.toString(),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    child: Icon(Icons.shopping_cart_outlined),
+                  ),
+                ),
+                title: Text("Cart Screen".tr),
                 activeColor: Colors.white),
             BottomNavyBarItem(
                 icon: Icon(Icons.shopping_bag),
@@ -944,7 +1188,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 }
 
 Future<void> _launchUrl() async {
-  final Uri webURl = Uri.parse(Appurl.baseURL + "privacy-policy");
+  final Uri webURl = Uri.parse(Appurl.baseURL + "terms");
 
   if (!await launchUrl(webURl)) {
     throw 'Could not launch $webURl';

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sv_craft/Features/grocery/controllar/bookmark_category_con.dart';
-import 'package:sv_craft/Features/grocery/controllar/category_controller.dart';
 import 'package:sv_craft/Features/grocery/controllar/delete_bookmark_category_con.dart';
 import 'package:sv_craft/Features/grocery/model/bookmark_category_model.dart';
-import 'package:sv_craft/Features/grocery/model/category_model.dart';
 import 'package:sv_craft/Features/grocery/view/bookmark_product_get.dart';
 import 'package:sv_craft/Features/grocery/view/grocery_product.dart';
 import 'package:sv_craft/Features/home/controller/home_controller.dart';

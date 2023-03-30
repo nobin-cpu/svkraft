@@ -57,6 +57,7 @@ removeBookmarkProduct(String textToken, productId) async {
           });
 
       if (response.statusCode == 200) {
+        
         print('Bookmark Product removed');
         return response.statusCode;
       } else {

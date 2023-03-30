@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
-import 'package:icons_plus/icons_plus.dart';
 import 'package:sv_craft/Features/grocery/controllar/delete_bookmark_proudct.dart';
 import 'package:sv_craft/Features/home/controller/home_controller.dart';
-import 'package:sv_craft/Features/market_place/controller/bookmark_con.dart';
-import 'package:sv_craft/Features/market_place/model/get_bookamrk_model.dart';
-import 'package:sv_craft/Features/market_place/view/market_product_details.dart';
+
 import 'package:sv_craft/Features/seller_profile/view/conto.dart';
 import 'package:sv_craft/Features/special_day/controllar/bookmark_con.dart';
 import 'package:sv_craft/Features/special_day/model/get_bookamrk_model.dart';
 import 'package:sv_craft/Features/special_day/view/product_details.dart';
-import 'package:sv_craft/Features/special_day/view/widgets/special_drawer.dart';
+
 import 'package:sv_craft/constant/api_link.dart';
 import 'package:sv_craft/constant/color.dart';
 import 'package:sv_craft/constant/shimmer_effects.dart';

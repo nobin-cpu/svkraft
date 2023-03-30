@@ -4,10 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sv_craft/Features/auth/view/signup_otp.dart';
-import 'package:sv_craft/Features/common/typedefs.dart';
 
 import '../../../constant/api_link.dart';
-import '../../home/home_screen.dart';
 
 Future<RegisterResponse> register(
     String phone, username, email, password) async {

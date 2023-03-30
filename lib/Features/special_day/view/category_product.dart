@@ -1,8 +1,12 @@
+import 'dart:convert';
+
+import 'package:badges/badges.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 import 'package:get/get.dart';
-import 'package:icons_plus/icons_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:sv_craft/Features/cart/view/cart_screen.dart';
 import 'package:sv_craft/Features/home/controller/home_controller.dart';
 import 'package:sv_craft/Features/home/home_screen.dart';
@@ -10,16 +14,16 @@ import 'package:sv_craft/Features/profile/view/profile_screen.dart';
 import 'package:sv_craft/Features/special_day/controllar/bookmark_con.dart';
 import 'package:sv_craft/Features/special_day/controllar/category_1_con.dart';
 import 'package:sv_craft/Features/special_day/controllar/special_all_product_con.dart';
-import 'package:sv_craft/Features/special_day/model/category_1.dart';
 import 'package:sv_craft/Features/special_day/view/Bookmark_product_show.dart';
 
 import 'package:sv_craft/Features/special_day/view/product_details.dart';
 import 'package:sv_craft/Features/special_day/view/special_home_screen.dart';
-import 'package:sv_craft/Features/special_day/view/widgets/category_card.dart';
 import 'package:sv_craft/constant/api_link.dart';
 import 'package:sv_craft/constant/color.dart';
 import 'package:sv_craft/constant/shimmer_effects.dart';
+import '../../grocery/controllar/cart_count.dart';
 import '../model/special_all_product_model.dart';
+import 'package:http/http.dart' as http;
 
 class CategoryProuctScreen extends StatefulWidget {
   CategoryProuctScreen({
@@ -34,6 +38,7 @@ class CategoryProuctScreen extends StatefulWidget {
 }
 
 class _CategoryProuctScreenState extends State<CategoryProuctScreen> {
+  Cartcontrollerofnav _cartControllers =Get.put(Cartcontrollerofnav());
   final SpecialAllProductController _specialAllProductController =
       Get.put(SpecialAllProductController());
   SpBookmarkController _spBookmarkController = Get.put(SpBookmarkController());
@@ -41,10 +46,38 @@ class _CategoryProuctScreenState extends State<CategoryProuctScreen> {
   final SpecialCategoryController _specialCategory1Controller =
       Get.put(SpecialCategoryController());
   var id;
+  Future carts() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('auth-token');
+
+    Map<String, String> requestHeaders = {
+      'Accept': 'application/json',
+      'authorization': "Bearer $token"
+    };
+
+    var response =
+        await http.get(Uri.parse(Appurl.cartitem), headers: requestHeaders);
+    if (response.statusCode == 200) {
+      print('Get post collected' + response.body);
+      var userData10 = jsonDecode(response.body)['count'];
+
+      return userData10;
+    } else {
+      print("post have no Data${response.body}");
+    }
+  }
+
+  Future? cartcount;
+  @override
+  void initState() {
+    super.initState();
+    cartcount = carts();
+  }
 
   var tokenp;
   var _selectedIndex = 2;
   PageController? _pageController;
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -352,8 +385,19 @@ class _CategoryProuctScreenState extends State<CategoryProuctScreen> {
               activeColor: Colors.white,
             ),
             BottomNavyBarItem(
-                icon: Icon(Icons.shopping_cart),
-                title: Text('Cart'.tr),
+                icon:Obx(
+                      () => Badge(
+                    position: BadgePosition.topEnd(),
+                    badgeContent: Container(
+                      child: Text(
+                        _cartControllers.count.value.toString() ,
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    child: Icon(Icons.shopping_cart_outlined),
+                  ),
+                ) ,
+                title: Text("Cart Screen".tr),
                 activeColor: Colors.white),
             BottomNavyBarItem(
                 icon: Icon(Icons.favorite),

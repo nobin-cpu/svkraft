@@ -1,13 +1,9 @@
 import 'package:get/get.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sv_craft/Features/cart/model/show_cart_model.dart';
-import 'package:sv_craft/Features/market_place/model/all_product_model.dart';
 
 import '../../../constant/api_link.dart';
-import '../../../services/services.dart';
 
 class CartController extends GetxController {
   var count = 0.obs;

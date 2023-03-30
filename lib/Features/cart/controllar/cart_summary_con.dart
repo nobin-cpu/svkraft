@@ -11,7 +11,8 @@ class GetCartSummaryController extends GetxController {
       print('Tokennnnnnnnnnnn $textToken');
       var url = Appurl.baseURL + 'api/cart/summary';
 
-      http.Response response = await http.get(Uri.parse(url), headers:ServicesClass.headersForAuth);
+      http.Response response =
+          await http.get(Uri.parse(url), headers: ServicesClass.headersForAuth);
 
       // print(response.body);
       if (response.statusCode == 200) {

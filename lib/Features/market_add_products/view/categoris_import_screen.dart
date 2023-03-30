@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:sv_craft/Features/home/home_screen.dart';
 import 'package:sv_craft/Features/market_add_products/controller/add_product_con.dart';
@@ -9,7 +9,6 @@ import 'package:sv_craft/Features/market_add_products/view/components/categoris_
 import 'package:sv_craft/Features/market_add_products/view/success.dart';
 import 'package:sv_craft/Features/market_place/controller/category_controller.dart';
 import 'package:http/http.dart' as http;
-import 'package:sv_craft/Features/market_place/view/market_place.dart';
 import 'dart:developer' as developer;
 
 import 'package:sv_craft/constant/api_link.dart';
@@ -47,6 +46,7 @@ class _AddMarketProductScreenState extends State<AddMarketProductScreen> {
     marketCategoryController.getcitys();
   }
 
+  bool loader = false;
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -758,7 +758,7 @@ class _AddMarketProductScreenState extends State<AddMarketProductScreen> {
                             child: Text("Term and Conditions".tr),
                             onTap: () async {
                               final Uri webURl =
-                                  Uri.parse(Appurl.baseURL + "privacy-policy");
+                                  Uri.parse(Appurl.baseURL + "terms");
 
                               if (!await launchUrl(webURl)) {
                                 throw 'Could not launch $webURl';
@@ -774,19 +774,25 @@ class _AddMarketProductScreenState extends State<AddMarketProductScreen> {
             )),
         bottomNavigationBar: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
-          child: ElevatedButton(
-            child: Text("Post".tr),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                uploadMarketCategoris();
-              } else {
-                errorSnackBar(
-                  title: "Text field error".tr,
-                  message: 'enter your valid form'.tr,
-                );
-              }
-            },
-          ),
+          child: loader == false
+              ? ElevatedButton(
+                  child: Text("Post".tr),
+                  onPressed: () {
+                    setState(() {
+                      loader = true;
+                    });
+                    if (_formKey.currentState!.validate()) {
+                      uploadMarketCategoris();
+                    } else {
+                      errorSnackBar(
+                        title: "Text field error".tr,
+                        message: 'enter your valid form'.tr,
+                      );
+                    }
+                  },
+                )
+              : SpinKitPouringHourGlass(
+                  color: Color.fromARGB(255, 121, 170, 255)),
         ),
       ),
     );
@@ -887,8 +893,8 @@ class _AddMarketProductScreenState extends State<AddMarketProductScreen> {
     if (res.statusCode == 200) {
       var data = jsonDecode(res.body);
 
-      successSnackBar(
-          title: "Success".tr, message: "Post added successfully".tr);
+      // successSnackBar(
+      //     title: "Success".tr, message: "Post added successfully".tr);
 
       addProductController.imagesFiles1.value = '';
       addProductController.imagesFiles2.value = '';
@@ -898,11 +904,130 @@ class _AddMarketProductScreenState extends State<AddMarketProductScreen> {
       addProductController.imagesFiles6.value = '';
       addProductController.images.clear();
 
-      Get.to(success());
+      _popupDialog(context);
     } else {
       var data = jsonDecode(res.body);
-      errorSnackBar(
-          title: "Status : ${data['success']}", message: data['message']);
+      _popup(context);
+      // errorSnackBar(
+      //     title: "Status : ${data['success']}", message: data['message']);
     }
   }
+}
+
+void _popupDialog(BuildContext context) {
+  showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Color(0xff004d95),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          content: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Container(
+                height: MediaQuery.of(context).size.height * .2,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Success",
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: MediaQuery.of(context).size.height * .02),
+                        child: InkWell(
+                          onTap: () {
+                            Get.to(() => HomeScreen());
+                          },
+                          child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10)),
+                              height: MediaQuery.of(context).size.height * .06,
+                              child: Padding(
+                                padding: EdgeInsets.all(10),
+                                child: FittedBox(
+                                  fit: BoxFit.cover,
+                                  child: Text(
+                                    "OK",
+                                    style: TextStyle(
+                                        color: Color(0xff004d95),
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              )),
+                        ),
+                      ),
+                    ]),
+              ),
+            ),
+          ),
+        );
+      });
+}
+
+void _popup(BuildContext context) {
+  showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Color(0xff004d95),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          content: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Container(
+                height: MediaQuery.of(context).size.height * .2,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Sorry you dont have post limit",
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: MediaQuery.of(context).size.height * .02),
+                        child: InkWell(
+                          onTap: () {
+                            Get.back();
+                          },
+                          child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10)),
+                              height: MediaQuery.of(context).size.height * .06,
+                              child: Padding(
+                                padding: EdgeInsets.all(10),
+                                child: FittedBox(
+                                  fit: BoxFit.cover,
+                                  child: Text(
+                                    "OK",
+                                    style: TextStyle(
+                                        color: Color(0xff004d95),
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              )),
+                        ),
+                      ),
+                    ]),
+              ),
+            ),
+          ),
+        );
+      });
 }

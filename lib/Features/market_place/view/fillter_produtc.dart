@@ -1,13 +1,6 @@
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:sv_craft/Features/chat/view/recent_chats.dart';
-import 'package:sv_craft/Features/home/home_screen.dart';
-import 'package:sv_craft/Features/market_place/view/bookmarked_product.dart';
-import 'package:sv_craft/Features/profile/view/profile_screen.dart';
+
 import 'package:get/get.dart';
-import '../../../constant/color.dart';
 
 class FillterProdutcShow extends StatefulWidget {
   FillterProdutcShow({super.key});

@@ -5,6 +5,8 @@ import 'package:sv_craft/Features/home/controller/home_controller.dart';
 import 'package:sv_craft/constant/color.dart';
 import 'package:arabic_numbers/arabic_numbers.dart';
 
+import '../../controllar/cart_count.dart';
+
 class GroceryCount extends StatefulWidget {
   const GroceryCount({
     Key? key,
@@ -22,6 +24,7 @@ class GroceryCount extends StatefulWidget {
 }
 
 class _GroceryCountState extends State<GroceryCount> {
+  final Cartcontrollerofnav _cartControllers = Get.put(Cartcontrollerofnav());
   final arabicNumber = ArabicNumbers();
   final AddtocartController _addToCartController =
       Get.put(AddtocartController());
@@ -54,6 +57,7 @@ class _GroceryCountState extends State<GroceryCount> {
                 _homeController.tokenGlobal,
               );
             }
+            _cartControllers.onInit();
           },
           child: Container(
             alignment: Alignment.center,
@@ -105,12 +109,12 @@ class _GroceryCountState extends State<GroceryCount> {
             height: 35,
             child: Text(
               arabicNumber.convert(count),
-              style: TextStyle(color: Colors.white, fontSize: 20),
+              style: const TextStyle(color: Colors.white, fontSize: 20),
               textAlign: TextAlign.center,
             ),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           width: 8,
         ),
         InkWell(
@@ -137,6 +141,7 @@ class _GroceryCountState extends State<GroceryCount> {
               //   Navigator.pop(context);
               // });
             }
+            _cartControllers.onInit();
           },
           child: Container(
             padding: const EdgeInsets.all(5),

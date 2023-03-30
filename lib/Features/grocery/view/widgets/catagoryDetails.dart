@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,8 +11,6 @@ import 'package:sv_craft/Features/grocery/view/grocery_product.dart';
 import 'package:sv_craft/Features/grocery/view/see_all_products.dart';
 import 'package:sv_craft/Features/home/controller/home_controller.dart';
 import 'package:sv_craft/constant/api_link.dart';
-
-import 'grocery_count.dart';
 
 class GroceryDetails extends StatefulWidget {
   final String Id;
@@ -67,6 +64,7 @@ class _GroceryDetailsState extends State<GroceryDetails> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 135, 235, 157),
         appBar: AppBar(
@@ -99,8 +97,9 @@ class _GroceryDetailsState extends State<GroceryDetails> {
                             children: [
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.end,
                                 children: [
+
                                   Padding(
                                     padding: EdgeInsets.all(10),
                                     child: Text(
@@ -109,40 +108,9 @@ class _GroceryDetailsState extends State<GroceryDetails> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Get.to(SeeAllProductsScreen(
-                                          title: snapshot.data[index]["title"],
-                                          id: snapshot.data[index]["id"]
-                                              .toString(),
-                                        ));
-                                      },
-                                      child: Text(
-                                        "View All".tr,
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          color: Colors
-                                              .transparent, // Step 2 SEE HERE
-                                          shadows: [
-                                            Shadow(
-                                                offset: Offset(0, -6),
-                                                color: Colors.black)
-                                          ], // Step 3 SEE HERE
-                                          decoration: TextDecoration.underline,
-
-                                          decorationColor:
-                                              Color.fromARGB(255, 0, 0, 0),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
                                 ],
                               ),
                               Container(
-                                height:
-                                    MediaQuery.of(context).size.height * .78,
                                 child: GridView.builder(
                                     physics: NeverScrollableScrollPhysics(),
                                     gridDelegate:
@@ -171,7 +139,7 @@ class _GroceryDetailsState extends State<GroceryDetails> {
                                                 height: MediaQuery.of(context)
                                                         .size
                                                         .height *
-                                                    .06,
+                                                    .05,
                                                 child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.start,
@@ -526,6 +494,70 @@ class _GroceryDetailsState extends State<GroceryDetails> {
                                       );
                                     }),
                               )
+                            ,  Padding(
+                                padding: EdgeInsets.only(
+
+                                    top: size.height * .019),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Get.to(SeeAllProductsScreen(
+                                      title: snapshot.data[index]["title"],
+                                      id: snapshot.data[index]["id"]
+                                          .toString(),
+                                    ));
+                                  },
+                                  child:
+                                  // Text(
+                                  //   "View All".tr,
+                                  //   style: TextStyle(
+                                  //     color: Colors.black,
+                                  //     shadows: [
+                                  //       Shadow(
+                                  //           color: Colors
+                                  //               .transparent,
+                                  //           offset: Offset(0, -5))
+                                  //     ],
+                                  //     fontWeight: FontWeight.bold,
+                                  //     decoration: TextDecoration
+                                  //         .underline,
+                                  //     decorationThickness: 3,
+                                  //   ),
+                                  // ),
+                                  Container(
+                                    height: size.height * .068,
+                                    width: size.width * .25,
+                                    decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius: BorderRadius.circular(2)
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 8.0, right: 8.0),
+                                      child: Center(
+                                        child: FittedBox(
+                                          fit: BoxFit.cover,
+                                          child: Text(
+                                            "View All".tr,
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              color: Colors
+                                                  .white, // Step 2 SEE HERE
+                                              // Step 3 SEE HERE
+
+                                              decorationColor:
+                                              Color.fromARGB(
+                                                  255,
+                                                  0,
+                                                  0,
+                                                  0),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           );
                         },

@@ -1,20 +1,13 @@
-import 'dart:convert';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sv_craft/Features/grocery/model/sub_item_model.dart';
 import 'package:sv_craft/Features/market_place/controller/dproduct_details_controller.dart';
 import 'package:sv_craft/Features/seller_profile/view/conto.dart';
-import 'package:sv_craft/constant/api_link.dart';
-import 'package:sv_craft/main.dart';
-import 'package:sv_craft/services/services.dart';
 
-import '../../chat/view/chat_screen.dart';
+
 import '../../home/controller/home_controller.dart';
 import '../../profile/controller/get_profile_con.dart';
-import '../messaging/UserChat_screen.dart';
-import 'package:http/http.dart' as http;
 
 class MarketProductDetails extends StatefulWidget {
   const MarketProductDetails({
@@ -66,58 +59,7 @@ class _MarketProductDetailsState extends State<MarketProductDetails> {
     'https://images.pexels.com/photos/112460/pexels-photo-112460.jpeg?auto=compress&cs=tinysrgb&w=600'
   ];
 
-  // var userData;
-
-  // Future fetchUser() async {
-  //   var response =
-  //       await http.get(Uri.parse('http://gigsoft.net/api/product/0'));
-  //   setState(() {
-  //     var decode = jsonDecode(response.body);
-
-  //     userData = decode['data'];
-  //     // print(userData);
-  //   });
-  // }
-  // @override
-  // void didChangeDependencies() {
-  //   // TODO: implement didChangeDependencies
-  //   super.didChangeDependencies();
-  //  fetchUser();
-  // }
-
-  // bool isproductdLoading = false;
-  // bool isproductByIdLoading = false;
-  // bool isClicked = false;
-  // // var subItemModel;
-  // List productData = [];
-  // void getProductbyId(String id) async {
-  //   setState(() {
-  //     isproductdLoading = true;
-  //   });
-  //   var url = Appurl.baseURL + "api/product/v2/find/$id";
-  //   try {
-  //     http.Response response =
-  //         await http.get(Uri.parse(url), headers: ServicesClass.headersForAuth);
-
-  //     if (response.statusCode == 200) {
-  //       final list = jsonDecode(response.body);
-  //       productData = list['data'] as List;
-  //     } else {
-  //       print('Product not found');
-  //     }
-  //   } catch (e) {
-  //     Get.snackbar(
-  //         backgroundColor: Colors.red,
-  //         colorText: Colors.white,
-  //         "Error",
-  //         e.toString());
-  //   }
-  //   setState(() {
-  //     isproductByIdLoading = false;
-  //     isClicked = true;
-  //   });
-  // }
-
+ 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -163,191 +105,8 @@ class _MarketProductDetailsState extends State<MarketProductDetails> {
                           ),
                         ],
                       ),
-                      // const Positioned(
-                      //     bottom: 20,
-                      //     left: 16,
-                      //     child: Text(
-                      //       "The Forza horizon 4",
-                      //       style: TextStyle(
-                      //           fontWeight: FontWeight.bold, fontSize: 22),
-                      //     )),
-                      // ignore: prefer_const_constructors
-                      // Positioned(
-                      //     bottom: 30,
-                      //     right: 10,
-                      //     child: Row(
-                      //       children: const [
-                      //         Icon(
-                      //           Icons.favorite,
-                      //           color: Colors.red,
-                      //           size: 50,
-                      //         ),
-                      //         SizedBox(width: 10),
-                      //         Icon(
-                      //           Icons.share_outlined,
-                      //           color: Colors.blue,
-                      //           size: 50,
-                      //         ),
-                      //       ],
-                      //     )),
-                    ],
+                   ],
                   ),
-///////end stack slider for image
-                  ///
-                  ///
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  //   child: Column(
-                  //     crossAxisAlignment: CrossAxisAlignment.start,
-                  //     children: [
-                  //       const Text("48,800 kr"),
-                  //       const SizedBox(height: 10),
-                  //       GestureDetector(
-                  //         onTap: () {
-                  //           getProfileController.userProfileModel.value.data!.id
-                  //                       .toString() ==
-                  //                   userMarkeID
-                  //               ? Get.snackbar(
-                  //                   backgroundColor: Colors.red,
-                  //                   colorText: Colors.white,
-                  //                   "Message response",
-                  //                   "You can't chat with you")
-                  //               : Get.to(ChatScreen(
-                  //                   name: marketUserName,
-                  //                   receiverUid: userMarkeID,
-                  //                   // productId: prodID,
-                  //                   // userName: userName,
-                  //                 ));
-                  //         },
-                  //         child: Padding(
-                  //           padding: const EdgeInsets.all(8.0),
-                  //           child: Container(
-                  //             height: 45,
-                  //             alignment: Alignment.center,
-                  //             decoration: BoxDecoration(
-                  //               color: Colors.blue,
-                  //               borderRadius: BorderRadius.circular(8),
-                  //             ),
-                  //             child: Row(
-                  //               mainAxisAlignment: MainAxisAlignment.center,
-                  //               children: const [
-                  //                 Icon(
-                  //                   Icons.chat,
-                  //                   color: Colors.white,
-                  //                 ),
-                  //                 SizedBox(width: 6),
-                  //                 Text(
-                  //                   'Chat',
-                  //                   style: TextStyle(
-                  //                       color: Colors.white,
-                  //                       fontWeight: FontWeight.w500,
-                  //                       fontSize: 16),
-                  //                 ),
-                  //               ],
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //       const SizedBox(height: 10),
-                  //       const Text(
-                  //         "Profile",
-                  //         style: TextStyle(
-                  //             fontWeight: FontWeight.bold, fontSize: 18),
-                  //       ),
-                  //       const SizedBox(height: 10),
-                  //       Row(
-                  //         crossAxisAlignment: CrossAxisAlignment.start,
-                  //         children: [
-                  //           const CircleAvatar(
-                  //             radius: 35,
-                  //             backgroundImage: NetworkImage(
-                  //                 "https://images.pexels.com/photos/13861/IMG_3496bfree.jpg?auto=compress&cs=tinysrgb&w=600"),
-                  //           ),
-                  //           const SizedBox(width: 10),
-                  //           Column(
-                  //             crossAxisAlignment: CrossAxisAlignment.start,
-                  //             children: const [
-                  //               Text(
-                  //                 "Mangus Persone",
-                  //                 style: TextStyle(
-                  //                     fontWeight: FontWeight.bold,
-                  //                     fontSize: 18),
-                  //               ),
-                  //               Text("pg blokkersd 2014"),
-                  //             ],
-                  //           ),
-                  //         ],
-                  //       ),
-                  //       const SizedBox(height: 10),
-                  //       Padding(
-                  //         padding: const EdgeInsets.all(16),
-                  //         child: GridView.builder(
-                  //             itemCount: 12,
-                  //             shrinkWrap: true,
-                  //             primary: false,
-                  //             physics: BouncingScrollPhysics(),
-                  //             gridDelegate:
-                  //                 const SliverGridDelegateWithFixedCrossAxisCount(
-                  //                     crossAxisCount: 2,
-                  //                     mainAxisSpacing: 5,
-                  //                     mainAxisExtent: 50),
-                  //             itemBuilder: (BuildContext context, int index) {
-                  //               return SizedBox(
-                  //                 height: 100,
-                  //                 child: Row(
-                  //                   crossAxisAlignment:
-                  //                       CrossAxisAlignment.center,
-                  //                   children: [
-                  //                     const Icon(Icons.gas_meter_outlined,
-                  //                         size: 25),
-                  //                     const SizedBox(width: 8),
-                  //                     Column(
-                  //                       crossAxisAlignment:
-                  //                           CrossAxisAlignment.start,
-                  //                       mainAxisAlignment:
-                  //                           MainAxisAlignment.center,
-                  //                       children: [
-                  //                         SizedBox(
-                  //                           width: MediaQuery.of(context)
-                  //                                   .size
-                  //                                   .width *
-                  //                               0.26,
-                  //                           child: const Text(
-                  //                             "Virualh sj ",
-                  //                             maxLines: 1,
-                  //                             overflow: TextOverflow.ellipsis,
-                  //                             style: TextStyle(
-                  //                                 color: Colors.black54,
-                  //                                 fontSize: 14,
-                  //                                 fontWeight: FontWeight.bold),
-                  //                           ),
-                  //                         ),
-                  //                         const SizedBox(height: 2),
-                  //                         SizedBox(
-                  //                           width: MediaQuery.of(context)
-                  //                                   .size
-                  //                                   .width *
-                  //                               0.23,
-                  //                           child: const Text(
-                  //                             "Manuell jhasf ashf hh",
-                  //                             maxLines: 1,
-                  //                             overflow: TextOverflow.ellipsis,
-                  //                             style: TextStyle(
-                  //                                 color: Colors.black,
-                  //                                 fontSize: 11,
-                  //                                 fontWeight: FontWeight.w500),
-                  //                           ),
-                  //                         ),
-                  //                       ],
-                  //                     ),
-                  //                   ],
-                  //                 ),
-                  //               );
-                  //             }),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
 
                   Padding(
                       padding: const EdgeInsets.all(16.0),

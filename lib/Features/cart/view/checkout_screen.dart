@@ -5,7 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sv_craft/Features/cart/controllar/cart_summary_con.dart';
-import 'package:sv_craft/Features/cart/controllar/final2_cheakout_con.dart';
+
 import 'package:sv_craft/Features/cart/controllar/final_checkout_con.dart';
 import 'package:sv_craft/Features/cart/view/pick_date_and_time.dart';
 import 'package:sv_craft/Features/home/controller/home_controller.dart';
@@ -67,9 +67,32 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     }
   }
 
+  Future viewOffers() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('auth-token');
+
+    Map<String, String> requestHeaders = {
+      'Accept': 'application/json',
+      'authorization': "Bearer $token"
+    };
+
+    var response = await http.get(Uri.parse(Appurl.sellerProduct),
+        headers: requestHeaders);
+    if (response.statusCode == 200) {
+      print('Get post collected' + response.body);
+      var userData1 = jsonDecode(response.body)['data'];
+
+      return userData1;
+    } else {
+      print("post have no Data${response.body}");
+    }
+  }
+
+  Future? viewall;
   Future? viewall_experience;
   @override
   initState() {
+    viewall = viewOffers();
     viewall_experience = locationsss();
     super.initState();
     Future.delayed(const Duration(microseconds: 500), () async {
@@ -104,7 +127,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return SafeArea(
         child: Scaffold(
             appBar: AppBar(
-
               elevation: 0,
               centerTitle: true,
               title: Text("SV_Kraft".tr),
@@ -280,16 +302,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                                                       FontWeight
                                                                           .bold,
                                                                   fontSize: 14,
-                                                                  color: Colors
-                                                                      .grey))
+                                                                  color: Appcolor
+                                                                      .primaryColor))
                                                           : Text(c_name!,
                                                               style: TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold,
                                                                   fontSize: 14,
-                                                                  color: Colors
-                                                                      .grey)),
+                                                                  color: Appcolor
+                                                                      .primaryColor)),
                                                       items: shots
                                                           .map<
                                                               DropdownMenuItem<
@@ -304,6 +326,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                                                         'name'],
                                                                 child: new Text(
                                                                   value['name'],
+                                                                  style: TextStyle(
+                                                                      color: Appcolor
+                                                                          .primaryColor),
                                                                 ),
                                                               ))
                                                           .toList(),
@@ -347,6 +372,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 8),
                                 child: TextField(
+                                  style:
+                                      TextStyle(color: Appcolor.primaryColor),
                                   controller: deliveryAddressController,
                                   keyboardType: TextInputType.multiline,
                                   maxLines: null,
@@ -368,6 +395,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               children: [
                                 ElevatedButton(
                                     onPressed: () {
+                                      // setState(() {
+                                      //   int sum = int.parse(
+                                      //           CartSummary.shippingCharge) +
+                                      //       int.parse(CartSummary.totalPrice);
+                                      //   sum.toString();
+                                      // });
                                       Get.to(PickDateTime());
                                     },
                                     child: Text("Pic date and time".tr)),
@@ -462,8 +495,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                         ),
                                         const Spacer(),
                                         // var finalPrice = CartSummary.totalPrice + CartSummary.shippingCharge;
+
                                         Text(
-                                          '${CartSummary.totalPrice + CartSummary.shippingCharge} ' +
+                                          '${CartSummary.inTotal.toString()} ' +
                                               "kr".tr,
                                           style: const TextStyle(
                                               fontSize: 18,
@@ -486,6 +520,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               shadowColor: Colors.grey,
                               elevation: 2,
                               child: TextFormField(
+                                style: TextStyle(color: Appcolor.primaryColor),
                                 controller: _greetingsController,
                                 keyboardType: TextInputType.text,
                                 decoration: InputDecoration(

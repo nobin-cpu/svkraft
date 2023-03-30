@@ -82,6 +82,7 @@ class ShimmerEffect {
   static profileShimmerEffect() {
     return ListView(
       children: const [
+        
         ProfilePageShimmer(),
         VideoShimmer(),
         VideoShimmer(),

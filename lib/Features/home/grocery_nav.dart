@@ -1,11 +1,8 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:sv_craft/Features/grocery/view/grocery_product.dart';
-import 'package:sv_craft/Features/home/home_screen.dart';
-import 'package:sv_craft/Features/profile/view/profile_screen.dart';
 import 'package:sv_craft/constant/color.dart';
 
-import '../cart/view/cart_screen.dart';
 
 class GroceryNav extends StatefulWidget {
   const GroceryNav({Key? key}) : super(key: key);

@@ -1,13 +1,17 @@
 import 'dart:async';
-import 'dart:ui';
+import 'dart:convert';
+
+import 'package:badges/badges.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
+
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
-import 'package:icons_plus/icons_plus.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sv_craft/Features/bookmarks/controller/add_to_bookmarks_con.dart';
+import 'package:sv_craft/Features/cart/controllar/cart_controller.dart';
 import 'package:sv_craft/Features/cart/view/cart_screen.dart';
 import 'package:sv_craft/Features/grocery/controllar/all_product_controller.dart';
 import 'package:sv_craft/Features/grocery/controllar/bookmark_add_product.dart';
@@ -17,22 +21,23 @@ import 'package:sv_craft/Features/grocery/model/all_product_model.dart';
 import 'package:sv_craft/Features/grocery/model/sub_item_model.dart';
 import 'package:sv_craft/Features/grocery/view/bookmarks_screen.dart';
 import 'package:sv_craft/Features/grocery/view/grocery_search_page.dart';
-import 'package:sv_craft/Features/grocery/view/payment_history.dart';
+
 import 'package:sv_craft/Features/grocery/view/see_all_products.dart';
 import 'package:sv_craft/Features/grocery/view/widgets/categori_filter.dart';
-import 'package:sv_craft/Features/grocery/view/widgets/grocery_drawer.dart';
+
 import 'package:sv_craft/Features/grocery/view/widgets/grocery_count.dart';
 import 'package:sv_craft/Features/home/controller/home_controller.dart';
 import 'package:sv_craft/Features/home/home_screen.dart';
 import 'package:sv_craft/Features/market_place/controller/all_product_controller.dart';
 import 'package:sv_craft/Features/profile/view/profile_screen.dart';
-import 'package:sv_craft/common/log_x.dart';
+
 import 'package:sv_craft/constant/api_link.dart';
 import 'package:http/http.dart' as http;
-import 'package:sv_craft/services/services.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constant/color.dart';
 import '../../../constant/shimmer_effects.dart';
+import '../controllar/cart_count.dart';
 import 'offers_screen.dart';
 import 'order_history_screen.dart';
 
@@ -121,10 +126,81 @@ class _GroceryProductState extends State<GroceryProduct> {
   late GroceryAllProduct groceryAllProduct;
   bool haveaccess = true;
   bool accessreq = false;
+
   bool accessgrant = false;
+  Future viewOffers() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('auth-token');
+
+    Map<String, String> requestHeaders = {
+      'Accept': 'application/json',
+      'authorization': "Bearer $token"
+    };
+
+    var response =
+        await http.get(Uri.parse(Appurl.callus), headers: requestHeaders);
+    if (response.statusCode == 200) {
+      print('Get post collected' + response.body);
+      var userData1 = jsonDecode(response.body)['data'];
+
+      return userData1;
+    } else {
+      print("post have no Data${response.body}");
+    }
+  }
+
+  Future carouslink() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('auth-token');
+
+    Map<String, String> requestHeaders = {
+      'Accept': 'application/json',
+      'authorization': "Bearer $token"
+    };
+
+    var response =
+        await http.get(Uri.parse(Appurl.ads), headers: requestHeaders);
+    if (response.statusCode == 200) {
+      print('Get post collected' + response.body);
+      var userData1 = jsonDecode(response.body)['data'];
+
+      return userData1;
+    } else {
+      print("post have no Data${response.body}");
+    }
+  }
+
+  Future? viewall_experience;
+  Future? viewall_experiencess;
+  Future carts() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('auth-token');
+
+    Map<String, String> requestHeaders = {
+      'Accept': 'application/json',
+      'authorization': "Bearer $token"
+    };
+
+    var response =
+        await http.get(Uri.parse(Appurl.cartitem), headers: requestHeaders);
+    if (response.statusCode == 200) {
+      print('Get post collected' + response.body);
+      var userData10 = jsonDecode(response.body)['count'];
+
+      return userData10;
+    } else {
+      print("post have no Data${response.body}");
+    }
+  }
+
+  Cartcontrollerofnav _cartControllers = Get.put(Cartcontrollerofnav());
+  Future? cartcount;
   @override
   void initState() {
     super.initState();
+    cartcount = carts();
+    viewall_experience = viewOffers();
+    viewall_experiencess = carouslink();
     getGroceryProducts();
 
     haveaccess
@@ -152,7 +228,7 @@ class _GroceryProductState extends State<GroceryProduct> {
         const Duration(
           seconds: 1,
         ), () {
-      getProductbyId(groceryAllProduct.data[0].id.toString());
+      // getProductbyId(groceryAllProduct.data[0].id.toString());
       getProductbyId("0");
       selectIndex = 0;
       setState(() {});
@@ -187,6 +263,64 @@ class _GroceryProductState extends State<GroceryProduct> {
   }
 
   int selectIndex = 0;
+  final TextEditingController titlecontroller = TextEditingController();
+  final TextEditingController messagecontroller = TextEditingController();
+  Future withdraw() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('auth-token');
+
+    Map<String, String> requestHeaders = {
+      'Accept': 'application/json',
+      'authorization': "Bearer $token"
+    };
+    var request = await http.MultipartRequest(
+      'POST',
+      Uri.parse(Appurl.help),
+    );
+    request.fields.addAll({
+      'subject': titlecontroller.text,
+      'message': messagecontroller.text,
+    });
+
+    // if (_image != null) {
+    //   request.files
+    //       .add(await http.MultipartFile.fromPath('attached_file', _image.path));
+    // }
+
+    request.headers.addAll(requestHeaders);
+
+    request.send().then((result) async {
+      http.Response.fromStream(result).then((response) {
+        if (response.statusCode == 200) {
+          var data = jsonDecode(response.body);
+          print(titlecontroller.text);
+          titlecontroller.clear();
+          messagecontroller.clear();
+          // saveprefs(data["token"]);
+          // chat.clear();
+          Get.back();
+          setState(() {});
+        } else {
+          // print(title);
+          print(response.body.toString());
+          // Fluttertoast.showToast(
+          //     msg: "Error Occured",
+          //     toastLength: Toast.LENGTH_LONG,
+          //     gravity: ToastGravity.BOTTOM,
+          //     timeInSecForIosWeb: 1,
+          //     backgroundColor: Colors.red,
+          //     textColor: Colors.white,
+          //     fontSize: 16.0);
+          return response.body;
+        }
+      });
+    });
+  }
+
+  saveprefs(String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('auth-token', token);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -301,31 +435,48 @@ class _GroceryProductState extends State<GroceryProduct> {
                 width: MediaQuery.of(context).size.width * .90,
                 color: Color.fromARGB(115, 58, 58, 58),
               ),
-              InkWell(
-                onTap: () {},
-                child: Container(
-                    color: Color.fromARGB(243, 244, 244, 244),
-                    height: MediaQuery.of(context).size.height * .09,
-                    width: double.infinity,
-                    child: Padding(
-                      padding: EdgeInsets.all(14),
-                      child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            children: [
-                              Icon(Icons.message),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "Call US".tr,
-                                style: TextStyle(
-                                    fontSize: 17, fontWeight: FontWeight.bold),
-                              ),
-                            ],
+              FutureBuilder(
+                future: viewall_experience,
+                builder: (_, AsyncSnapshot<dynamic> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasData) {
+                    return InkWell(
+                      onTap: () {
+                        launch("tel:${snapshot.data["support_no"]}");
+                      },
+                      child: Container(
+                          color: Color.fromARGB(243, 244, 244, 244),
+                          height: MediaQuery.of(context).size.height * .09,
+                          width: double.infinity,
+                          child: Padding(
+                            padding: EdgeInsets.all(14),
+                            child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.call),
+                                    SizedBox(
+                                      width: 9,
+                                    ),
+                                    Text(
+                                      "Call Us".tr,
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                )),
                           )),
-                    )),
+                    );
+                  } else {
+                    return Text("No productt found");
+                  }
+                },
               ),
+
               Container(
                 height: 1,
                 width: MediaQuery.of(context).size.width * .90,
@@ -390,6 +541,7 @@ class _GroceryProductState extends State<GroceryProduct> {
                               ),
                               SizedBox(height: 8),
                               TextFormField(
+                                controller: titlecontroller,
                                 decoration: InputDecoration(
                                   border: UnderlineInputBorder(),
                                   labelText: 'Title'.tr,
@@ -397,6 +549,7 @@ class _GroceryProductState extends State<GroceryProduct> {
                               ),
                               SizedBox(height: 10),
                               TextFormField(
+                                controller: messagecontroller,
                                 maxLength: 556,
                                 keyboardType: TextInputType.multiline,
                                 maxLines: 6,
@@ -414,11 +567,14 @@ class _GroceryProductState extends State<GroceryProduct> {
                                         borderSide: BorderSide(
                                             color: Color.fromARGB(
                                                 255, 66, 125, 145))),
-                                    hintText: "Message here"),
+                                    hintText: "Message here".tr),
                               ),
                               SizedBox(height: 10),
                               ElevatedButton(
-                                  onPressed: () {}, child: Text("Send"))
+                                  onPressed: () {
+                                    withdraw();
+                                  },
+                                  child: Text("Send".tr))
                             ],
                           ),
                         )),
@@ -613,6 +769,160 @@ class _GroceryProductState extends State<GroceryProduct> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      FutureBuilder(
+                        future: viewall_experiencess,
+                        builder: (_, AsyncSnapshot<dynamic> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else if (snapshot.hasData) {
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height:
+                                      MediaQuery.of(context).size.height * .14,
+                                  width: double.infinity,
+                                  child: Stack(
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+
+                                    children: <Widget>[
+                                      Positioned(
+                                        child: Container(
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              .2,
+                                          child: CarouselSlider.builder(
+                                            itemCount: snapshot.data.length,
+                                            options: CarouselOptions(
+                                              // enableInfiniteScroll: true,
+                                              autoPlayCurve:
+                                                  Curves.fastOutSlowIn,
+                                              autoPlay: snapshot.data[0]
+                                                              ['banner']
+                                                          .toString()
+                                                          .length >
+                                                      1
+                                                  ? true
+                                                  : false,
+                                              aspectRatio: 16 / 10,
+                                              autoPlayAnimationDuration:
+                                                  Duration(milliseconds: 800),
+                                              viewportFraction: 1.0,
+                                            ),
+                                            itemBuilder:
+                                                (context, index, realIdx) {
+                                              return InkWell(
+                                                onTap: () {
+                                                  launch(snapshot.data[index]
+                                                      ['link']);
+                                                },
+                                                child: Container(
+                                                  margin: EdgeInsets.all(5),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                    image: DecorationImage(
+                                                      image: NetworkImage(Appurl
+                                                              .baseURL +
+                                                          snapshot.data[index]
+                                                                  ["banner"]
+                                                              .toString()),
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                      // Positioned(
+                                      //     right: 7,
+                                      //     bottom: 0,
+                                      //     child: Row(
+                                      //       children: [
+                                      //         Container(
+                                      //             height: 55,
+                                      //             width: 55,
+                                      //             decoration: BoxDecoration(
+                                      //                 color: Colors.grey,
+                                      //                 borderRadius:
+                                      //                     BorderRadius.circular(23)),
+                                      //             child: IconButton(
+                                      //               onPressed: () async {
+                                      //                 if (snapshot.data[0]['bookmark'] ==
+                                      //                     true) {
+                                      //                   var status =
+                                      //                       await _bookmarkController
+                                      //                           .removeBookmarkProduct(
+                                      //                               _homeController
+                                      //                                   .tokenGlobal,
+                                      //                               snapshot.data[0]
+                                      //                                   ["product_id"]);
+
+                                      //                   if (status == 200) {
+                                      //                     snapshot.data[0]['bookmark'] =
+                                      //                         false;
+                                      //                     print("bookmark removed");
+                                      //                     setState(() {});
+                                      //                   }
+                                      //                 } else {
+                                      //                   var status =
+                                      //                       await _bookmarkController
+                                      //                           .addBookmarkProduct(
+                                      //                               _homeController
+                                      //                                   .tokenGlobal,
+                                      //                               snapshot.data[0]
+                                      //                                   ["product_id"]);
+
+                                      //                   if (status == 200) {
+                                      //                     print(
+                                      //                         snapshot.data[0]['bookmark']);
+                                      //                     print("bookmark added");
+                                      //                     snapshot.data[0]['bookmark'] =
+                                      //                         true;
+                                      //                     setState(() {});
+                                      //                   }
+                                      //                 }
+                                      //               },
+                                      //               icon: snapshot.data[0]['bookmark'] ==
+                                      //                       true
+                                      //                   ? Icon(
+                                      //                       Icons.favorite,
+                                      //                       color: Color.fromARGB(
+                                      //                           255, 255, 0, 0),
+                                      //                       size: 25,
+                                      //                     )
+                                      //                   : Icon(
+                                      //                       Icons.favorite_border_outlined,
+                                      //                       color: Color.fromARGB(
+                                      //                           255, 255, 255, 255),
+                                      //                       size: 25,
+                                      //                     ),
+                                      //             )),
+                                      //     ],
+                                      //     )),
+
+                                      //Container
+                                      //Container
+                                    ], //<Widget>[]
+                                  ), //Stack
+                                ),
+                              ],
+                              //Center
+                            );
+                          } else {
+                            return Text("No productt found");
+                          }
+                        },
+                      ),
                       ///// categoris ui desing here..
                       SizedBox(
                         height: MediaQuery.of(context).size.height * .3,
@@ -678,14 +988,17 @@ class _GroceryProductState extends State<GroceryProduct> {
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.all(1.0),
-                                            child: Text(
-                                                groceryAllProduct
-                                                    .data[index].name,
-                                                style: const TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.normal)),
+                                            child: FittedBox(
+                                              fit: BoxFit.cover,
+                                              child: Text(
+                                                  groceryAllProduct
+                                                      .data[index].name,
+                                                  style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.normal)),
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -720,64 +1033,20 @@ class _GroceryProductState extends State<GroceryProduct> {
                                                   const EdgeInsets.all(8.0),
                                               child: Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                    MainAxisAlignment.end,
                                                 children: [
+                                                  // Text(
+                                                  //   productItem.title,
+                                                  //   style: TextStyle(
+                                                  //       fontWeight:
+                                                  //           FontWeight.bold),
+                                                  // ),
+
                                                   Text(
                                                     productItem.title,
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold),
-                                                  ),
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      Get.to(
-                                                          SeeAllProductsScreen(
-                                                        title:
-                                                            productItem.title,
-                                                        id: productItem.id
-                                                            .toString(),
-                                                      ));
-                                                    },
-                                                    child:
-                                                        // Text(
-                                                        //   "View All".tr,
-                                                        //   style: TextStyle(
-                                                        //     color: Colors.black,
-                                                        //     shadows: [
-                                                        //       Shadow(
-                                                        //           color: Colors
-                                                        //               .transparent,
-                                                        //           offset: Offset(0, -5))
-                                                        //     ],
-                                                        //     fontWeight: FontWeight.bold,
-                                                        //     decoration: TextDecoration
-                                                        //         .underline,
-                                                        //     decorationThickness: 3,
-                                                        //   ),
-                                                        // ),
-                                                        Text(
-                                                      "View All".tr,
-                                                      style: TextStyle(
-                                                        fontSize: 13,
-                                                        color: Colors
-                                                            .transparent, // Step 2 SEE HERE
-                                                        shadows: [
-                                                          Shadow(
-                                                              offset:
-                                                                  Offset(0, -6),
-                                                              color:
-                                                                  Colors.black)
-                                                        ], // Step 3 SEE HERE
-                                                        decoration:
-                                                            TextDecoration
-                                                                .underline,
-
-                                                        decorationColor:
-                                                            Color.fromARGB(
-                                                                255, 0, 0, 0),
-                                                      ),
-                                                    ),
                                                   ),
                                                 ],
                                               ),
@@ -1201,7 +1470,71 @@ class _GroceryProductState extends State<GroceryProduct> {
                                                       ),
                                                     );
                                                   }),
-                                            )
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: size.width * .38,
+                                                  top: size.height * .019),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  Get.to(SeeAllProductsScreen(
+                                                    title: productItem.title,
+                                                    id: productItem.id
+                                                        .toString(),
+                                                  ));
+                                                },
+                                                child:
+                                                    // Text(
+                                                    //   "View All".tr,
+                                                    //   style: TextStyle(
+                                                    //     color: Colors.black,
+                                                    //     shadows: [
+                                                    //       Shadow(
+                                                    //           color: Colors
+                                                    //               .transparent,
+                                                    //           offset: Offset(0, -5))
+                                                    //     ],
+                                                    //     fontWeight: FontWeight.bold,
+                                                    //     decoration: TextDecoration
+                                                    //         .underline,
+                                                    //     decorationThickness: 3,
+                                                    //   ),
+                                                    // ),
+                                                    Container(
+                                                  height: size.height * .068,
+                                                  width: size.width * .25,
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.red,
+                                                    borderRadius: BorderRadius.circular(2)
+                                                      ),
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 8.0, right: 8.0),
+                                                    child: Center(
+                                                      child: FittedBox(
+                                                        fit: BoxFit.cover,
+                                                        child: Text(
+                                                          "View All".tr,
+                                                          style: TextStyle(
+                                                            fontSize: 13,
+                                                            color: Colors
+                                                                .white, // Step 2 SEE HERE
+                                                            // Step 3 SEE HERE
+
+                                                            decorationColor:
+                                                                Color.fromARGB(
+                                                                    255,
+                                                                    0,
+                                                                    0,
+                                                                    0),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
                                           ],
                                         );
                                       })
@@ -1760,9 +2093,17 @@ class _GroceryProductState extends State<GroceryProduct> {
               activeColor: Colors.white,
             ),
             BottomNavyBarItem(
-                icon: Padding(
-                  padding: EdgeInsets.all(5.0),
-                  child: Icon(Icons.shopping_cart),
+                icon: Obx(
+                  () => Badge(
+                    position: BadgePosition.topEnd(),
+                    badgeContent: Container(
+                      child: Text(
+                        _cartControllers.count.value.toString(),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    child: Icon(Icons.shopping_cart_outlined),
+                  ),
                 ),
                 title: Text("Cart Screen".tr),
                 activeColor: Colors.white),
@@ -1785,59 +2126,6 @@ class _GroceryProductState extends State<GroceryProduct> {
       ),
     ));
   }
-
-  // SizedBox categorisUiDesing() {
-  //   return SizedBox(
-  //     height: 100,
-  //     child: ListView.builder(
-  //         itemCount: groceryAllProduct.data.length,
-  //         shrinkWrap: true,
-  //         scrollDirection: Axis.horizontal,
-  //         itemBuilder: (context, index) {
-  //           return InkWell(
-  //             onTap: () {
-  //               selectIndex = index;
-  //               // getProductbyId(groceryAllProduct.data[index].id.toString());
-  //               setState(() {
-  //                 getProductbyId(groceryAllProduct.data[index].id.toString());
-  //               });
-  //             },
-  //             child: Padding(
-  //               padding: const EdgeInsets.all(8.0),
-  //               child: Container(
-  //                 width: 85,
-  //                 decoration: BoxDecoration(
-  //                   color: selectIndex == index
-  //                       ? Colors.blueAccent
-  //                       : Colors.white24,
-  //                   borderRadius: BorderRadius.circular(15),
-  //                 ),
-  //                 child: Column(
-  //                   mainAxisAlignment: MainAxisAlignment.center,
-  //                   crossAxisAlignment: CrossAxisAlignment.center,
-  //                   children: [
-  //                     Image.network(
-  //                       Appurl.baseURL + groceryAllProduct.data[index].image,
-  //                       height: 45,
-  //                       width: 45,
-  //                       fit: BoxFit.cover,
-  //                     ),
-  //                     Padding(
-  //                       padding: const EdgeInsets.all(1.0),
-  //                       child: Text(groceryAllProduct.data[index].name,
-  //                           style: const TextStyle(
-  //                               color: Colors.black,
-  //                               fontSize: 14,
-  //                               fontWeight: FontWeight.normal)),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               ),
-  //             ),
-  //           );
-  //         }),
-  //   );
-  // }
 
   late SubItemModel subItemModel;
   bool isClicked = false;
@@ -1999,15 +2287,24 @@ class _GroceryProductState extends State<GroceryProduct> {
         print('Product not found');
       }
     } catch (e) {
-      Get.snackbar(
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          "Error",
-          e.toString());
+      // Get.snackbar(
+      //     backgroundColor: Colors.red,
+      //     colorText: Colors.white,
+      //     "Error",
+      //     e.toString());
     }
     setState(() {
       isproductByIdLoading = false;
       isClicked = true;
     });
+  }
+}
+
+_launchURL() async {
+  const url = 'https://flutterdevs.com/';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
   }
 }

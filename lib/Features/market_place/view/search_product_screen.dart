@@ -6,7 +6,7 @@ import 'package:sv_craft/Features/home/controller/home_controller.dart';
 import 'package:sv_craft/Features/market_place/controller/market_search_controller.dart';
 import 'package:sv_craft/Features/market_place/view/details.dart';
 import 'package:sv_craft/Features/market_place/view/market_place.dart';
-import 'package:sv_craft/Features/market_place/view/market_product_details.dart';
+
 import 'package:sv_craft/constant/api_link.dart';
 import 'package:sv_craft/constant/color.dart';
 

@@ -2,17 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:sv_craft/Features/home/controller/home_controller.dart';
-import 'package:sv_craft/Features/home/home_screen.dart';
 import 'package:sv_craft/Features/market_place/view/details.dart';
-import 'package:sv_craft/Features/market_place/view/market_product_details.dart';
-import 'package:sv_craft/Features/profile/view/profile_screen.dart';
+
 import 'package:sv_craft/Features/seller_profile/controller/seller_profile_con.dart';
 import 'package:sv_craft/Features/seller_profile/models/seller_profile_model.dart';
-import 'package:sv_craft/Features/seller_profile/models/show_all_product.dart';
 import 'package:sv_craft/Features/seller_profile/controller/show_all_product.dart';
-import 'package:sv_craft/Features/seller_profile/view/details_product.dart';
 import 'package:sv_craft/constant/color.dart';
-import 'package:icons_plus/icons_plus.dart';
 
 import '../../../constant/api_link.dart';
 

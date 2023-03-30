@@ -1,30 +1,18 @@
-import 'dart:convert';
 import 'dart:ui';
-import 'package:http/http.dart' as http;
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sv_craft/Features/chat/view/chat_screen.dart';
 import 'package:sv_craft/Features/market_place/view/details.dart';
-import 'package:sv_craft/Features/market_place/view/telephone.dart';
-import 'package:sv_craft/Features/seller_profile/view/profile.dart';
 import 'package:sv_craft/app/module/filter/controller/filter_product_con.dart';
 import 'package:sv_craft/constant/api_link.dart';
-import 'package:sv_craft/constant/shimmer_effects.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-import '../../../../Features/chat/view/recent_chats.dart';
 import '../../../../Features/home/home_screen.dart';
 import '../../../../Features/market_place/view/bookmarked_product.dart';
 import '../../../../Features/market_place/view/market_place.dart';
-import '../../../../Features/market_place/view/market_product_details.dart';
-import '../../../../Features/market_place/widgets/filter_box_widgets.dart';
 import '../../../../Features/profile/controller/get_profile_con.dart';
 import '../../../../Features/profile/view/profile_screen.dart';
 import '../../../../Features/seller_profile/models/seller_profile_model.dart';
-import '../../../../Features/seller_profile/view/conto.dart';
 import '../../../../constant/color.dart';
-import 'dart:developer' as devlog;
 
 class FilterProducts extends StatefulWidget {
   @override
@@ -341,10 +329,10 @@ class _FilterProductsState extends State<FilterProducts> {
               MaterialPageRoute(builder: (context) => const HomeScreen()),
             );
           } else if (_selectedIndex == 1) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => RecentChats()),
-            );
+            // Navigator.pushReplacement(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => RecentChats()),
+            // );
           } else if (_selectedIndex == 2) {
             // Navigator.pushReplacement(
             //   context,

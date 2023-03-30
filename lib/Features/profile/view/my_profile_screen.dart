@@ -1,16 +1,13 @@
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:sv_craft/Features/market_place/view/market_product_details.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 import 'package:sv_craft/Features/profile/controller/user_profile_controller.dart';
 import 'package:sv_craft/Features/seller_profile/view/conto.dart';
 import 'package:sv_craft/constant/api_link.dart';
 
-import '../../../main.dart';
 import '../controller/get_profile_con.dart';
 import '../models/user_profile_model.dart';
 import 'package:http/http.dart' as http;
@@ -126,9 +123,22 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                                     ],
                                                   )),
                                               ElevatedButton(
-                                                  onPressed: () {
-                                                    userProfileController
-                                                        .getImageFromMGallery();
+                                                  onPressed: () async {
+                                                    PermissionStatus
+                                                        _galarystatus =
+                                                        await Permission.camera
+                                                            .request();
+                                                    if (_galarystatus ==
+                                                        PermissionStatus
+                                                            .granted) {
+                                                      userProfileController
+                                                          .getImageFromMGallery();
+                                                    }
+                                                    if (_galarystatus ==
+                                                        PermissionStatus
+                                                            .denied) {
+                                                      Get.back();
+                                                    }
                                                   },
                                                   child: Row(
                                                     children: [

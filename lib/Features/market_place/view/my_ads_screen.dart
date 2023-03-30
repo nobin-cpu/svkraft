@@ -1,8 +1,6 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:sv_craft/constant/api_link.dart';
 import 'package:sv_craft/constant/shimmer_effects.dart';
 import 'package:sv_craft/main.dart';
@@ -10,7 +8,6 @@ import 'package:sv_craft/main.dart';
 import '../../home/controller/home_controller.dart';
 
 import '../../seller_profile/controller/seller_profile_con.dart';
-import '../../seller_profile/controller/show_all_product.dart';
 import '../../seller_profile/models/seller_profile_model.dart';
 
 class MyAdsScreen extends StatefulWidget {

@@ -1,14 +1,10 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../constant/api_link.dart';
 import '../../../services/services.dart';
-import '../model/all_product_model.dart';
 
 class GroceryFilterPage extends StatelessWidget {
   GroceryFilterPage({super.key});

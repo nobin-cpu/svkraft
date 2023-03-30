@@ -1,12 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sv_craft/Features/home/home_screen.dart';
-import 'package:sv_craft/common/bottom_button.dart';
 import 'package:sv_craft/common/bottom_button_column.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:otp_text_field/otp_text_field.dart';
@@ -126,7 +124,7 @@ class _OtpToHomeScreenState extends State<OtpToHomeScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
+              padding: EdgeInsets.symmetric(horizontal: 30),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -134,8 +132,8 @@ class _OtpToHomeScreenState extends State<OtpToHomeScreen> {
                   SizedBox(
                     height: size.height * 0.05,
                   ),
-                  const Text(
-                    "OTP Authentication",
+                  Text(
+                    "OTP Authentication".tr,
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 24,
@@ -145,7 +143,7 @@ class _OtpToHomeScreenState extends State<OtpToHomeScreen> {
                     height: 10,
                   ),
                   Text(
-                    "An authentication code has been sent to\n(+00) 999 999 999",
+                    "An authentication code has been sent to\n(+00) 999 999 999".tr,
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
@@ -183,7 +181,7 @@ class _OtpToHomeScreenState extends State<OtpToHomeScreen> {
                       //   MaterialPageRoute(builder: (context) => HomeScreen()),
                       // );
                     },
-                    buttonText: "CONTINUE1",
+                    buttonText: "CONTINUE".tr,
                     buttonIcon: Icons.arrow_right_alt_sharp,
                   ),
                   SizedBox(
@@ -192,8 +190,8 @@ class _OtpToHomeScreenState extends State<OtpToHomeScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        "Don't get OTP?",
+                       Text(
+                        "Don't get OTP?".tr,
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 14,
@@ -201,8 +199,8 @@ class _OtpToHomeScreenState extends State<OtpToHomeScreen> {
                         ),
                       ),
                       TextButton(
-                        child: const Text(
-                          "Resend",
+                        child:  Text(
+                          "Resend".tr,
                           style: TextStyle(
                             color: Colors.red,
                             fontSize: 18,

@@ -1,16 +1,12 @@
 import 'dart:convert';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sv_craft/Features/auth/model/auth_user.dart';
 
 import '../../../constant/api_link.dart';
-import '../../market_place/messaging/database.dart';
 
 class SigninController extends GetxController {
   final _formKey = GlobalKey<FormState>();

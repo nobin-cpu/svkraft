@@ -3,14 +3,9 @@ import 'package:get/get.dart';
 import 'package:sv_craft/Features/special_day/view/category_product.dart';
 import 'package:sv_craft/Features/special_day/view/widgets/alarm_system.dart';
 import 'package:sv_craft/constant/api_link.dart';
-import 'package:sv_craft/constant/color.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../../main.dart';
-import '../../../home/controller/home_controller.dart';
-import '../../controllar/bookmark_con.dart';
-import '../../controllar/category_1_con.dart';
-import '../../controllar/special_all_product_con.dart';
 
 var tokenp;
 var id;

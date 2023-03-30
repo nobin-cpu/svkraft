@@ -1,18 +1,12 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:icons_plus/icons_plus.dart';
-import 'package:sv_craft/Features/chat/view/chat_screen.dart';
-import 'package:sv_craft/Features/chat/view/recent_chats.dart';
+
 import 'package:sv_craft/Features/grocery/controllar/delete_bookmark_proudct.dart';
 import 'package:sv_craft/Features/home/controller/home_controller.dart';
 import 'package:sv_craft/Features/market_place/controller/bookmark_con.dart';
 import 'package:sv_craft/Features/market_place/model/get_bookamrk_model.dart';
 import 'package:sv_craft/Features/market_place/view/details.dart';
 import 'package:sv_craft/Features/market_place/view/market_place.dart';
-import 'package:sv_craft/Features/market_place/view/market_product_details.dart';
-import 'package:sv_craft/Features/market_place/view/sellerprof(static).dart';
-import 'package:sv_craft/app/constant/api_constant.dart';
 import 'package:sv_craft/constant/api_link.dart';
 import 'package:sv_craft/constant/color.dart';
 

@@ -3,16 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:sv_craft/Features/bookmarks/controller/add_to_bookmarks_con.dart';
 import 'package:sv_craft/Features/grocery/controllar/all_product_controller.dart';
 import 'package:sv_craft/Features/grocery/controllar/bookmark_add_product.dart';
 import 'package:sv_craft/Features/grocery/controllar/bookmark_category_con.dart';
 import 'package:sv_craft/Features/grocery/controllar/searched_product_con.dart';
-import 'package:sv_craft/Features/grocery/model/product_model.dart';
 import 'package:sv_craft/Features/grocery/model/sub_item_model.dart';
 import 'package:sv_craft/Features/grocery/view/grocery_product.dart';
 import 'package:sv_craft/Features/grocery/view/see_all_products.dart';
@@ -20,7 +16,7 @@ import 'package:sv_craft/Features/grocery/view/widgets/grocery_count.dart';
 import 'package:sv_craft/Features/home/controller/home_controller.dart';
 import 'package:sv_craft/Features/market_place/controller/all_product_controller.dart';
 import 'package:sv_craft/constant/api_link.dart';
-import 'package:sv_craft/constant/catagoriHttp.dart';
+
 import 'package:sv_craft/services/services.dart';
 import 'package:http/http.dart' as http;
 

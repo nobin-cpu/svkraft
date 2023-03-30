@@ -12,10 +12,10 @@ class FilterProductController extends GetxController {
   }
 
   void getFilteringData(String category, String subcategory,
-      String chldcategory, String type, String ads, String sortering) async {
+      String chldcategory, String type, String ads, String sortering,String loc) async {
     isLoading(true);
     var data = await ApiService().getFilteringProducts("product/filter",
-        category, subcategory, chldcategory, type, ads, sortering);
+        category, subcategory, chldcategory, type, ads, sortering,loc);
     if (data.data!.isNotEmpty) {
       realdata.clear();
       realdata.addAll(data.data!);

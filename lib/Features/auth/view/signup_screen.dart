@@ -1,18 +1,12 @@
 import 'dart:convert';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
-import 'package:icons_plus/icons_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sv_craft/Features/auth/view/signup_otp.dart';
-import 'package:sv_craft/Features/home/home_screen.dart';
-import 'package:sv_craft/common/bottom_button_column.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:sv_craft/constant/api_link.dart';
-import 'package:sv_craft/constant/color.dart';
-import 'package:sv_craft/constant/shimmer_effects.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../controllar/signup_controllar.dart';
 import 'package:http/http.dart' as http;
@@ -427,7 +421,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                   ),
                                 ],
                               ),
-                              child: TextFormField(
+                              child: 
+                              TextFormField(
                                 controller: _userNameController,
                                 decoration: InputDecoration(
                                   enabledBorder: OutlineInputBorder(
@@ -582,7 +577,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                   ),
                                 ],
                               ),
-                              child: TextFormField(
+                              child: 
+                              TextFormField(
                                 controller: _passwordController,
                                 decoration: InputDecoration(
                                   enabledBorder: OutlineInputBorder(
@@ -652,8 +648,15 @@ class _SignupScreenState extends State<SignupScreen> {
                                     ),
                                   ),
                                   InkWell(
-                                    child: Text("Term and Conditions".tr),
-                                    onTap: () {},
+                                    child: Text("Privacy policy".tr),
+                                    onTap: () async {
+                                      final Uri webURl = Uri.parse(
+                                          Appurl.baseURL + "privacy-policy");
+
+                                      if (!await launchUrl(webURl)) {
+                                        throw 'Could not launch $webURl';
+                                      }
+                                    },
                                   ),
                                 ],
                               ),

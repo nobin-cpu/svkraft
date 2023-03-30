@@ -6,7 +6,6 @@ import 'package:sv_craft/Features/market_place/model/all_category_model.dart';
 import 'package:sv_craft/app/constant/api_constant.dart';
 import 'package:sv_craft/app/module/filter/model/filtering_products_model.dart';
 import 'package:sv_craft/app/module/shops/models/slider_model.dart';
-import 'package:sv_craft/services/services.dart';
 
 class ApiService {
   var client = http.Client();
@@ -29,13 +28,14 @@ class ApiService {
     }
   }
 
-  Future<AllCategoryModel> getCategory(String endpoint) async {SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? getTOken = prefs.getString('auth-token');
-  Map<String, String> headersForAuth = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'Authorization': 'Bearer $getTOken',
-  };
+  Future<AllCategoryModel> getCategory(String endpoint) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? getTOken = prefs.getString('auth-token');
+    Map<String, String> headersForAuth = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $getTOken',
+    };
     final response = await client.get(
         Uri.parse(ApiConstant.base_url + endpoint),
         headers: headersForAuth);
@@ -53,7 +53,8 @@ class ApiService {
       String chldcategory,
       String type,
       String ads,
-      String sortering) async {
+      String sortering,
+      String loc) async {
     final body = {
       'category': category,
       'subcategory': subcategory,
@@ -61,6 +62,7 @@ class ApiService {
       'type': type,
       'ads': ads,
       'sortering ': sortering,
+      'location': loc
     };
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? getTOken = prefs.getString('auth-token');

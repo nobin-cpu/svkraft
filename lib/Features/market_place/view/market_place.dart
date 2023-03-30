@@ -2,19 +2,15 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:shadow/shadow.dart';
 import 'package:get/get.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sv_craft/Features/cart/controllar/addtocart_con.dart';
-import 'package:sv_craft/Features/chat/view/chat_screen.dart';
 
-import 'package:sv_craft/Features/grocery/view/widgets/cat.dart';
 import 'package:sv_craft/Features/market_add_products/view/categoris_import_screen.dart';
-import 'package:sv_craft/Features/chat/view/recent_chats.dart';
+
 import 'package:sv_craft/Features/home/controller/home_controller.dart';
 import 'package:sv_craft/Features/home/home_screen.dart';
 import 'package:sv_craft/Features/market_place/controller/all_product_controller.dart';
@@ -22,36 +18,25 @@ import 'package:sv_craft/Features/market_place/controller/bookmark_con.dart';
 import 'package:sv_craft/Features/market_place/controller/category_controller.dart';
 import 'package:sv_craft/Features/market_place/model/all_product_model.dart';
 import 'package:sv_craft/Features/market_place/model/market_category.dart';
-import 'package:sv_craft/Features/market_place/view/alluserchat.dart';
 import 'package:sv_craft/Features/market_place/view/bookmarked_product.dart';
-import 'package:sv_craft/Features/market_place/view/category_product.dart';
 import 'package:sv_craft/Features/market_place/view/chatlist.dart';
 import 'package:sv_craft/Features/market_place/view/details.dart';
-import 'package:sv_craft/Features/market_place/view/filter_box_screen.dart';
-import 'package:sv_craft/Features/market_place/view/market_product_details.dart';
 import 'package:sv_craft/Features/market_place/view/my_ads_screen.dart';
 import 'package:sv_craft/Features/market_place/view/my_membership_screen.dart';
 import 'package:sv_craft/Features/market_place/view/search_product_screen.dart';
-import 'package:sv_craft/Features/market_place/view/sellerprof(static).dart';
-import 'package:sv_craft/Features/market_place/view/sellerprofile.dart';
-import 'package:sv_craft/Features/market_place/view/telephone.dart';
 import 'package:sv_craft/Features/market_place/widgets/filter_box_widgets.dart';
-import 'package:sv_craft/Features/profile/models/get_address_model.dart';
 import 'package:sv_craft/Features/profile/view/my_adds.dart';
 import 'package:sv_craft/Features/profile/view/profile_screen.dart';
-import 'package:sv_craft/Features/seller_profile/controller/seller_profile_con.dart';
 import 'package:sv_craft/Features/seller_profile/controller/show_all_product.dart';
 import 'package:sv_craft/Features/seller_profile/models/seller_profile_model.dart';
 import 'package:sv_craft/Features/seller_profile/view/conto.dart';
 import 'package:sv_craft/Features/seller_profile/view/profile.dart';
 import 'package:sv_craft/Features/special_day/view/widgets/special_drawer.dart';
-import 'package:sv_craft/app/constant/api_constant.dart';
 import 'package:sv_craft/constant/api_link.dart';
 import 'package:sv_craft/constant/color.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:sv_craft/constant/shimmer_effects.dart';
-import 'package:sv_craft/main.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
@@ -186,10 +171,33 @@ class _MarketPlaceState extends State<MarketPlace> {
     prefs.setString('auth-token', token);
   }
 
+  Future viewOffers() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('auth-token');
+
+    Map<String, String> requestHeaders = {
+      'Accept': 'application/json',
+      'authorization': "Bearer $token"
+    };
+
+    var response =
+        await http.get(Uri.parse(Appurl.callus), headers: requestHeaders);
+    if (response.statusCode == 200) {
+      print('Get post collected' + response.body);
+      var userData1 = jsonDecode(response.body)['data'];
+
+      return userData1;
+    } else {
+      print("post have no Data${response.body}");
+    }
+  }
+
+  Future? viewall_experience;
+
   @override
   void initState() {
     super.initState();
-
+    viewall_experience = viewOffers();
     SellerProfile;
     setTokenToVariable();
 
@@ -655,31 +663,46 @@ class _MarketPlaceState extends State<MarketPlace> {
                     width: MediaQuery.of(context).size.width * .90,
                     color: Color.fromARGB(115, 58, 58, 58),
                   ),
-                  InkWell(
-                    onTap: () {},
-                    child: Container(
-                        color: Color.fromARGB(243, 244, 244, 244),
-                        height: MediaQuery.of(context).size.height * .09,
-                        width: double.infinity,
-                        child: Padding(
-                          padding: EdgeInsets.all(14),
-                          child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Row(
-                                children: [
-                                  Icon(Icons.call),
-                                  SizedBox(
-                                    width: 9,
-                                  ),
-                                  Text(
-                                    "Call Us".tr,
-                                    style: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
+                  FutureBuilder(
+                    future: viewall_experience,
+                    builder: (_, AsyncSnapshot<dynamic> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.hasData) {
+                        return InkWell(
+                          onTap: () {
+                            launch("tel://${snapshot.data["support_no"]}");
+                          },
+                          child: Container(
+                              color: Color.fromARGB(243, 244, 244, 244),
+                              height: MediaQuery.of(context).size.height * .09,
+                              width: double.infinity,
+                              child: Padding(
+                                padding: EdgeInsets.all(14),
+                                child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.call),
+                                        SizedBox(
+                                          width: 9,
+                                        ),
+                                        Text(
+                                          "Call Us".tr,
+                                          style: TextStyle(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    )),
                               )),
-                        )),
+                        );
+                      } else {
+                        return Text("No productt found");
+                      }
+                    },
                   ),
                   Container(
                     height: 1,
@@ -708,20 +731,6 @@ class _MarketPlaceState extends State<MarketPlace> {
                     fontSize: 24,
                     fontWeight: FontWeight.bold)),
             actions: [
-              CircleAvatar(
-                radius: 18,
-                backgroundColor: Appcolor.iconShadowColor, //<-- SEE HERE
-                child: IconButton(
-                  icon: Icon(
-                    Icons.change_circle,
-                    color: Appcolor.iconColor,
-                    size: 20,
-                  ),
-                  onPressed: () {
-                    builddialog(context);
-                  },
-                ),
-              ),
               CircleAvatar(
                 radius: 18,
                 backgroundColor: Appcolor.iconShadowColor, //<-- SEE HERE
@@ -788,8 +797,16 @@ class _MarketPlaceState extends State<MarketPlace> {
                       // ),
                       _categoryData != null
                           ? SizedBox(
-                              height: 120,
-                              child: ListView.builder(
+                              height: size.height * .3,
+                              child: GridView.builder(
+                                reverse: true,
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 1.5,
+                                  mainAxisExtent:
+                                      MediaQuery.of(context).size.height * .17,
+                                ),
                                 physics: BouncingScrollPhysics(),
                                 shrinkWrap: true,
                                 scrollDirection: Axis.horizontal,
@@ -826,22 +843,25 @@ class _MarketPlaceState extends State<MarketPlace> {
                                               child: Image.network(
                                                 Appurl.baseURL +
                                                     _categoryData[index].image,
-                                                height: 45,
-                                                width: 45,
+                                                height: size.height * .068,
+                                                width: size.width * .18,
                                                 fit: BoxFit.cover,
                                               ),
                                             ),
                                             Padding(
                                               padding:
                                                   const EdgeInsets.all(8.0),
-                                              child: Text(
-                                                  _categoryData[index]
-                                                      .categoryName,
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 13,
-                                                      fontWeight:
-                                                          FontWeight.normal)),
+                                              child: FittedBox(
+                                                fit: BoxFit.cover,
+                                                child: Text(
+                                                    _categoryData[index]
+                                                        .categoryName,
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 13,
+                                                        fontWeight:
+                                                            FontWeight.normal)),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -961,8 +981,9 @@ class _MarketPlaceState extends State<MarketPlace> {
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
             child: GridView.count(
               crossAxisCount: 2,
-              crossAxisSpacing: 4,
-              mainAxisSpacing: MediaQuery.of(context).size.height * .06,
+              crossAxisSpacing: 10,
+              childAspectRatio: .75,
+              mainAxisSpacing: MediaQuery.of(context).size.height * .04,
               primary: false,
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
@@ -972,7 +993,7 @@ class _MarketPlaceState extends State<MarketPlace> {
                 return productsItems.isEmpty
                     ? Text("No product found")
                     : Container(
-                        color: Color.fromARGB(255, 143, 211, 231),
+                        color: Appcolor.primaryColor,
                         child: GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -991,9 +1012,9 @@ class _MarketPlaceState extends State<MarketPlace> {
                             // height: 10,
                             child: Padding(
                                 padding: EdgeInsets.only(
-                                    right: 1,
-                                    left: MediaQuery.of(context).size.width *
-                                        .022),
+                                    right: 0,
+                                    left:
+                                        MediaQuery.of(context).size.width * .0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -1001,156 +1022,164 @@ class _MarketPlaceState extends State<MarketPlace> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
-                                        Stack(
-                                          children: [
-                                            ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                child: Container(
-                                                  height: MediaQuery.of(context)
+                                        FittedBox(
+                                          fit: BoxFit.cover,
+                                          child: Stack(
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    top: MediaQuery.of(context)
+                                                            .size
+                                                            .height *
+                                                        .07),
+                                                child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            0),
+                                                    child: FittedBox(
+                                                      fit: BoxFit.cover,
+                                                      child: Container(
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height *
+                                                            .17,
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            .49,
+                                                        child: Image.network(
+                                                          Appurl.baseURL +
+                                                              productsItems[
+                                                                          itemIndex]
+                                                                      [
+                                                                      'image'][0]
+                                                                  ["file_path"],
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                    )),
+                                              ),
+                                              Positioned(
+                                                  right: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      .01,
+                                                  top: MediaQuery.of(context)
                                                           .size
                                                           .height *
-                                                      .21,
-                                                  width: 180,
-                                                  child: Image.network(
-                                                    Appurl.baseURL +
-                                                        productsItems[itemIndex]
-                                                                ['image'][0]
-                                                            ["file_path"],
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                )),
-                                            Positioned(
-                                                right: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    .01,
-                                                top: 0,
-                                                child: IconButton(
-                                                  onPressed: () async {
-                                                    if (productsItems[itemIndex]
-                                                            ['bookmark'] ==
-                                                        true) {
-                                                      var status = await _bookmarkController
-                                                          .removeBookmarkProduct(
-                                                              _homeController
-                                                                  .tokenGlobal,
-                                                              productsItems[
-                                                                      itemIndex]
-                                                                  [
-                                                                  "product_id"]);
-
-                                                      if (status == 200) {
-                                                        productsItems[itemIndex]
-                                                                ['bookmark'] =
-                                                            false;
-                                                      }
-                                                      //  getDataFromProductID(
-                                                      //     _categoryData[selectIndex].id.toString());
-                                                      setState(() {});
-                                                    } else {
-                                                      var status = await _bookmarkController
-                                                          .addBookmarkProduct(
-                                                              _homeController
-                                                                  .tokenGlobal,
-                                                              productsItems[
-                                                                      itemIndex]
-                                                                  [
-                                                                  "product_id"]);
-
-                                                      if (status == 200) {
-                                                        productsItems[itemIndex]
-                                                            ['bookmark'] = true;
-                                                      }
-                                                      //  getDataFromProductID(
-                                                      //     _categoryData[selectIndex].id.toString());
-                                                      setState(() {});
-                                                    }
-                                                  },
-                                                  icon: productsItems[itemIndex]
+                                                      .0,
+                                                  child: IconButton(
+                                                    onPressed: () async {
+                                                      if (productsItems[
+                                                                  itemIndex]
                                                               ['bookmark'] ==
-                                                          true
-                                                      ? Icon(
-                                                          Icons.favorite,
-                                                          color: Color.fromARGB(
-                                                              255, 255, 1, 1),
-                                                          size: 30,
-                                                        )
-                                                      : Icon(
-                                                          Icons
-                                                              .favorite_border_outlined,
-                                                          color: Colors.black,
-                                                          size: 30,
-                                                        ),
-                                                )),
-                                          ],
-                                        ),
-                                        // Column(
-                                        //   mainAxisAlignment:
-                                        //       MainAxisAlignment.start,
-                                        //   crossAxisAlignment:
-                                        //       CrossAxisAlignment.start,
-                                        //   children: [
-                                        //     Padding(
-                                        //       padding: EdgeInsets.only(
-                                        //           left: MediaQuery.of(context)
-                                        //                   .size
-                                        //                   .width *
-                                        //               .012),
-                                        //       child: Text(
-                                        //           '${productsItems[itemIndex]['product_name']}',
-                                        //           style: TextStyle(
-                                        //               color: Colors.black,
-                                        //               fontSize:
-                                        //                   MediaQuery.of(context)
-                                        //                           .size
-                                        //                           .height *
-                                        //                       .02,
-                                        //               fontWeight: FontWeight.bold)),
-                                        //     ),
-                                        //     Text(
-                                        //       " ${productsItems[itemIndex]['price']} " +
-                                        //           "kr".tr,
-                                        //       softWrap: false,
-                                        //       style: TextStyle(
-                                        //           color: Colors.black,
-                                        //           fontSize: MediaQuery.of(context)
-                                        //                   .size
-                                        //                   .height *
-                                        //               .02),
-                                        //       overflow: TextOverflow.ellipsis,
-                                        //     ),
-                                        //   ],
-                                        // )
+                                                          true) {
+                                                        var status = await _bookmarkController
+                                                            .removeBookmarkProduct(
+                                                                _homeController
+                                                                    .tokenGlobal,
+                                                                productsItems[
+                                                                        itemIndex]
+                                                                    [
+                                                                    "product_id"]);
 
-                                        // ,  Padding(
-                                        //     padding: EdgeInsets.only(
-                                        //         left: MediaQuery.of(context)
-                                        //                 .size
-                                        //                 .width *
-                                        //             .012),
-                                        //     child: Text(
-                                        //         '${productsItems[itemIndex]['product_name']}',
-                                        //         style: TextStyle(
-                                        //             color: Colors.black,
-                                        //             fontSize: MediaQuery.of(context)
-                                        //                     .size
-                                        //                     .height *
-                                        //                 .02,
-                                        //             fontWeight: FontWeight.bold)),
-                                        //   ),
-                                        //   Text(
-                                        //     " ${productsItems[itemIndex]['price']} " +
-                                        //         "kr".tr,
-                                        //     softWrap: false,
-                                        //     style: TextStyle(
-                                        //         color: Colors.black,
-                                        //         fontSize: MediaQuery.of(context)
-                                        //                 .size
-                                        //                 .height *
-                                        //             .02),
-                                        //     overflow: TextOverflow.ellipsis,
-                                        //   ),
+                                                        if (status == 200) {
+                                                          productsItems[
+                                                                      itemIndex]
+                                                                  ['bookmark'] =
+                                                              false;
+                                                        }
+                                                        //  getDataFromProductID(
+                                                        //     _categoryData[selectIndex].id.toString());
+                                                        setState(() {});
+                                                      } else {
+                                                        var status = await _bookmarkController
+                                                            .addBookmarkProduct(
+                                                                _homeController
+                                                                    .tokenGlobal,
+                                                                productsItems[
+                                                                        itemIndex]
+                                                                    [
+                                                                    "product_id"]);
+
+                                                        if (status == 200) {
+                                                          productsItems[
+                                                                      itemIndex]
+                                                                  ['bookmark'] =
+                                                              true;
+                                                        }
+                                                        //  getDataFromProductID(
+                                                        //     _categoryData[selectIndex].id.toString());
+                                                        setState(() {});
+                                                      }
+                                                    },
+                                                    icon: productsItems[
+                                                                    itemIndex]
+                                                                ['bookmark'] ==
+                                                            true
+                                                        ? Icon(
+                                                            Icons.favorite,
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    255,
+                                                                    255,
+                                                                    1,
+                                                                    1),
+                                                            size: 30,
+                                                          )
+                                                        : Icon(
+                                                            Icons
+                                                                .favorite_border_outlined,
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    255,
+                                                                    255,
+                                                                    255,
+                                                                    255),
+                                                            size: 27,
+                                                          ),
+                                                  )),
+                                              productsItems[itemIndex]
+                                                          ['location'] !=
+                                                      null
+                                                  ? Positioned(
+                                                      left:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              .01,
+                                                      top:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              .01,
+                                                      child: FittedBox(
+                                                        fit: BoxFit.cover,
+                                                        child: Row(
+                                                          children: [
+                                                            Icon(Icons.pin_drop,
+                                                                color: Colors
+                                                                    .white),
+                                                            Text(
+                                                              '${productsItems[itemIndex]['location']}',
+                                                              style: TextStyle(
+                                                                  fontSize: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .height *
+                                                                      .027,
+                                                                  color: Colors
+                                                                      .white),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ))
+                                                  : SizedBox()
+                                            ],
+                                          ),
+                                        ),
                                       ],
                                     ),
                                     Column(
@@ -1165,29 +1194,46 @@ class _MarketPlaceState extends State<MarketPlace> {
                                               left: MediaQuery.of(context)
                                                       .size
                                                       .width *
-                                                  .012),
-                                          child: Text(
-                                              '${productsItems[itemIndex]['product_name']}',
+                                                  .02),
+                                          child: FittedBox(
+                                            fit: BoxFit.cover,
+                                            child: Text(
+                                                '${productsItems[itemIndex]['product_name']}',
+                                                style: TextStyle(
+                                                    color: Color.fromARGB(
+                                                        255, 255, 255, 255),
+                                                    fontSize:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            .02,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              left: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  .016),
+                                          child: FittedBox(
+                                            fit: BoxFit.cover,
+                                            child: Text(
+                                              " ${productsItems[itemIndex]['price']} " +
+                                                  "kr".tr,
+                                              softWrap: false,
                                               style: TextStyle(
-                                                  color: Colors.black,
+                                                  color: Color.fromARGB(
+                                                      255, 255, 255, 255),
                                                   fontSize:
                                                       MediaQuery.of(context)
                                                               .size
                                                               .height *
-                                                          .02,
-                                                  fontWeight: FontWeight.bold)),
-                                        ),
-                                        Text(
-                                          " ${productsItems[itemIndex]['price']} " +
-                                              "kr".tr,
-                                          softWrap: false,
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  .02),
-                                          overflow: TextOverflow.ellipsis,
+                                                          .022),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
                                         ),
                                       ],
                                     )
@@ -1252,159 +1298,6 @@ class _MarketPlaceState extends State<MarketPlace> {
     }).whenComplete(() => {print("Firenase....COmplete::::")});
   }*/
 
-  getDrawerItems() {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.75,
-      child: Drawer(
-        child: Container(
-            width: MediaQuery.of(context).size.width * 0.75,
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 20),
-            child: ListView.builder(
-                shrinkWrap: true,
-                physics: BouncingScrollPhysics(),
-                itemCount: marketDrawerItems.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      navigatorRoutinDrawer(marketDrawerItems[index]['Name']);
-                    },
-                    child: Container(
-                      color: Colors.transparent,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                marketDrawerItems[index]["Icon"],
-                                SizedBox(width: 8),
-                                Text(
-                                  "${marketDrawerItems[index]['Name']}",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 18),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Container(
-                            color: Colors.black12,
-                            height: 1,
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-                })),
-      ),
-    );
-  }
-
-  void navigatorRoutinDrawer(String rountName) async {
-    switch (rountName) {
-      case "My Ads":
-        {
-          Get.to(MyAdsScreen());
-        }
-        break;
-
-      case "My Membership":
-        {
-          Get.to(MySubscriptionScreen());
-        }
-        break;
-      case "Favourite":
-        {
-          Get.to(BookmarkedProductScreen());
-        }
-        break;
-      case "Call US":
-        {
-          print("Call Us");
-        }
-        break;
-      case "Messages":
-        {
-          Get.to(RecentChats());
-        }
-        break;
-      case "Privacy and Policy":
-        {
-          final Uri webURl = Uri.parse(Appurl.baseURL + "privacy-policy");
-
-          if (!await launchUrl(webURl)) {
-            throw 'Could not launch $webURl';
-          }
-        }
-        break;
-      case "Help and Support":
-        {
-          Get.bottomSheet(
-            backgroundColor: Colors.transparent,
-            Container(
-                height: MediaQuery.of(context).size.height * 0.6,
-                color: Colors.white,
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "Help And Support",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18),
-                      ),
-                      SizedBox(height: 8),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          border: UnderlineInputBorder(),
-                          labelText: 'Title',
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      TextFormField(
-                        maxLength: 556,
-                        keyboardType: TextInputType.multiline,
-                        maxLines: 6,
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            labelText: 'Message',
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey)),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black),
-                            ),
-                            errorBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color.fromARGB(255, 66, 125, 145))),
-                            hintText: "Message here"),
-                      ),
-                      SizedBox(height: 10),
-                      ElevatedButton(onPressed: () {}, child: Text("Send"))
-                    ],
-                  ),
-                )),
-            isDismissible: true,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(35),
-            ),
-            enableDrag: false,
-          );
-        }
-        break;
-
-      default:
-        {
-          print("Defult");
-        }
-        break;
-    }
-  }
 }
 
 class ShowSellerProfileController extends GetxController {

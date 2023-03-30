@@ -11,7 +11,8 @@ class _ResturanthomeState extends State<Resturanthome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
+      body:
+       CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
             pinned: true,

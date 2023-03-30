@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:sv_craft/Features/auth/view/forgate_otp.dart';
-import 'package:sv_craft/common/bottom_button.dart';
 import 'package:sv_craft/common/bottom_button_column.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 

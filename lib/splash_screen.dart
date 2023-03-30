@@ -1,12 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:sv_craft/Features/auth/view/signin_screen.dart';
-import 'package:sv_craft/Features/home/my_home_test.dart';
-import 'package:sv_craft/common/bottom_button.dart';
 
-import 'package:sv_craft/constant/color.dart';
 
 import 'Features/home/home_screen.dart';
 
@@ -25,7 +20,6 @@ class _SplashScreenState extends State<SplashScreen> {
       Get.to(HomeScreen());
     }));
   }
-
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;

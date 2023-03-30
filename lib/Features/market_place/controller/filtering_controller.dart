@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sv_craft/Features/market_place/model/all_category_model.dart';
 import 'package:sv_craft/app/service/api_service.dart';
@@ -18,6 +17,8 @@ class FilteringController extends GetxController{
   var advertisement = "".obs;
   var selectedCatPosition = 0.obs;
   var selectedSubCatPosition = 0.obs;
+  var selectedchildSubCatPosition = 0.obs;
+
   var data ;
 
 

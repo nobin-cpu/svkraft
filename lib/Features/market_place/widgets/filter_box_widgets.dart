@@ -1,6 +1,6 @@
 import 'dart:convert';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,6 +15,7 @@ class FilterBoxWidget extends StatefulWidget {
 }
 
 class _FilterBoxWidgetState extends State<FilterBoxWidget> {
+  final TextEditingController texts = TextEditingController();
   bool _ischecked = false;
   bool _isbuttonactive = false;
   final filterCon = Get.put(FilteringController());
@@ -55,12 +56,40 @@ class _FilterBoxWidgetState extends State<FilterBoxWidget> {
     }
   }
 
+  var Address;
+  var CartSummary;
+  var location, location2;
+  var loc, c_name;
+  var val, val2;
+  List shots = [];
+  Future locationsss() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('auth-token');
+
+    Map<String, String> requestHeaders = {
+      'Accept': 'application/json',
+      'authorization': "Bearer $token"
+    };
+
+    var response = await http.get(Uri.parse(Appurl.locationinsignup),
+        headers: requestHeaders);
+    if (response.statusCode == 200) {
+      print('Get collected' + response.body);
+      var userData1 = jsonDecode(response.body)["data"];
+
+      return userData1;
+    } else {
+      print("post have no Data${response.body}");
+    }
+  }
+
   Future? view;
+  Future? viewall_experience;
 
   @override
   void initState() {
     view = viewO(cN, sN, chN, tp, ad);
-
+    viewall_experience = locationsss();
     super.initState();
   }
 
@@ -133,32 +162,118 @@ class _FilterBoxWidgetState extends State<FilterBoxWidget> {
                             ),
                           ),
                         ),
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: Icon(_ischecked
-                                  ? Icons.check_box
-                                  : Icons.check_box_outline_blank),
-                              onPressed: () {
-                                setState(() {
-                                  _ischecked = !_ischecked;
-                                  _isbuttonactive = !_isbuttonactive;
-                                });
-                                print(_ischecked);
-                              },
+                        // Row(
+                        //   children: [
+                        //     IconButton(
+                        //       icon: Icon(_ischecked
+                        //           ? Icons.check_box
+                        //           : Icons.check_box_outline_blank),
+                        //       onPressed: () {
+                        //         setState(() {
+                        //           _ischecked = !_ischecked;
+                        //           _isbuttonactive = !_isbuttonactive;
+                        //         });
+                        //         print(_ischecked);
+                        //       },
+                        //     ),
+                        //     SizedBox(
+                        //       width: 5,
+                        //     ),
+                        //     Text(
+                        //       "Sold throughout Iraq".tr,
+                        //       style: TextStyle(
+                        //         color: Colors.black,
+                        //         fontSize: 18,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              color: Colors.white,
                             ),
-                            SizedBox(
-                              width: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: FutureBuilder(
+                                  future: viewall_experience!,
+                                  builder: (context, snapshot) {
+                                    shots = (snapshot.data ?? []) as List;
+                                    return snapshot.hasData
+                                        ? shots != null
+                                            ? Container(
+                                                child:
+                                                    new DropdownButton<String>(
+                                                  value: loc,
+                                                  isExpanded:
+                                                      true, //Add this property
+
+                                                  hint: loc == null
+                                                      ? Text("Enter address".tr,
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 14,
+                                                              color:
+                                                                  Colors.grey))
+                                                      : Text(c_name!,
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 14,
+                                                              color:
+                                                                  Colors.grey)),
+                                                  items: shots
+                                                      .map<
+                                                          DropdownMenuItem<
+                                                              String>>((value) =>
+                                                          new DropdownMenuItem<
+                                                              String>(
+                                                            value: value["id"]
+                                                                    .toString() +
+                                                                "_" +
+                                                                value['name'],
+                                                            child: new Text(
+                                                              value['name'],
+                                                            ),
+                                                          ))
+                                                      .toList(),
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      loc = value;
+                                                      val = loc.split('_');
+                                                      print(val[0] +
+                                                          " NEw value");
+                                                      print(val[1] +
+                                                          " class value");
+                                                      c_name = val[1];
+                                                      location = val[1];
+                                                      viewall_experience =
+                                                          locationsss();
+                                                    });
+                                                    // print(_mySelection);
+                                                    print(location);
+                                                  },
+                                                  underline:
+                                                      DropdownButtonHideUnderline(
+                                                          child: Container()),
+                                                ),
+                                              )
+                                            : SpinKitThreeInOut(
+                                                color: Colors.white,
+                                                size: 10,
+                                              )
+                                        : Container();
+                                  }),
                             ),
-                            Text(
-                              "Sold throughout Iraq".tr,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
+
                         Container(
                           height: MediaQuery.of(context).size.height * .060,
                           width: MediaQuery.of(context).size.width,
@@ -307,9 +422,11 @@ class _FilterBoxWidgetState extends State<FilterBoxWidget> {
                                               print(data.name);
                                               filterCon.subcategory.value =
                                                   data.name.toString();
-                                              filterCon.selectedSubCatPosition
+                                              filterCon
+                                                  .selectedchildSubCatPosition
                                                   .value = index;
-                                              filterCon.fetchSubcategory(index);
+                                              filterCon
+                                                  .fetchChildSubcategory(index);
                                               sN = data.name.toString();
                                               viewO(cN, sN, chN, tp, ad);
                                               Navigator.of(context).pop();
@@ -391,10 +508,12 @@ class _FilterBoxWidgetState extends State<FilterBoxWidget> {
                                             onTap: () {
                                               filterCon.childcategory.value =
                                                   data.name.toString();
-                                              // filterCon.selectedSubCatPosition.value = index;
+                                              filterCon.selectedSubCatPosition
+                                                  .value = index;
                                               chN = data.name.toString();
                                               viewO(cN, sN, chN, tp, ad);
-                                              // filterCon.fetchChildSubcategory(index);
+                                              filterCon
+                                                  .fetchChildSubcategory(index);
                                               Navigator.of(context).pop();
                                             },
                                             leading: Icon(Icons.list),
@@ -846,14 +965,17 @@ class _FilterBoxWidgetState extends State<FilterBoxWidget> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             onPressed: () {
-              
               filterProductController.getFilteringData(
                   filterCon.category.value,
                   filterCon.subcategory.value,
                   filterCon.childcategory.value,
                   filterCon.typeofads.value,
                   filterCon.advertisement.value,
-                  filterCon.sortaring.value);
+                  filterCon.sortaring.value,
+                  // texts.text
+                  loc);
+              print(texts);
+              print(loc);
               Get.to(() => FilterProducts());
             },
             child: Container(

@@ -5,6 +5,10 @@ class LocalString extends Translations {
   // TODO: implement keys
   Map<String, Map<String, String>> get keys => {
         "swe": {
+          "Block this user": "Block this user",
+          "CONTINUE": "FORTSÄTTA",
+          "An authentication code has been sent to\n(+00) 999 999 999":
+              "En autentiseringskod har skickats till\n(+00) 999 999 999",
           "C.C": "C.C",
           "SV_Kraft": "SV_Kraft",
           "Subscription": "Prenumeration",
@@ -259,9 +263,37 @@ class LocalString extends Translations {
           "Record created successfully": "Record skapad framgångsrikt",
           "Buy with coin": "Buy with coin",
           "Cash on delivery": "Cash on delivery",
-          "Enter address": "Enter address"
+          "Enter address": "Enter address",
+          "OTP Authentication": "OTP-autentisering",
+          "Don't get OTP?": "Får du inte OTP?",
+          "Resend": "Skicka igen",
+          'Violent content': 'Violent content',
+          "Select a reason below to report":
+              "Välj en anledning nedan att rapportera",
+          "Report user": "Rapportera användare",
+          "Report this user": "Rapportera den här användaren",
+          "Are you sure you want to report this user?":
+              "Är du säker på att du vill rapportera den här användaren?",
+          "NO": "NEJ",
+          "Are you sure you wants to delete your account?":
+              "Är du säker på att du vill ta bort ditt konto?",
+          "Delete Account": "Radera konto",
+          "Massage": "Massage",
+          "Report": "Rapportera",
+          "Call": "Ring upp",
+          "Block":"Blockera"
+
         },
         "eng": {
+          "Call": "Call",
+          "Report": "Report",
+          "Delete Account": "Delete Account",
+          "Are you sure you want to report this user?":
+              "Are you sure you want to report this user?",
+          "Select a reason below to report": "Select a reason below to report",
+          "Resend": "Resend",
+          "CONTINUE": "CONTINUE",
+          "OTP Authentication": "OTP Authentication",
           "Enter address": "Enter address",
           "Buy with coin": "Buy with coin",
           "Cash on delivery": "Cash on delivery",
@@ -524,8 +556,49 @@ class LocalString extends Translations {
           "Message here": "Message here",
           "Send": "Send",
           'Message': 'Message',
+          "Privacy policy": "Privacy policy",
+          "An authentication code has been sent to\n(+00) 999 999 999":
+              "An authentication code has been sent to\n(+00) 999 999 999",
+          "Don't get OTP?": "Don't get OTP?",
+          "Report user": "Rapportera användare",
+          "Block this user": "Block this user",
+          "Are you sure you want to Block this user?":
+              "Are you sure you want to Block this user?",
+          "YES": "YES",
+          "Report this user": "Report this user",
+          "NO": "NO",
+          "Are you sure you wants to delete your account?":
+              "Are you sure you wants to delete your account?",
+          "Massage": "Massage",
+          "Block":"Block"
         },
         "arabic": {
+          "Block":"حاجز"
+,
+          "Call": "يتصل",
+          "Report": "تقرير",
+          "Massage": "تدليك",
+          "Delete Account": "حذف الحساب",
+          "Are you sure you wants to delete your account?":
+              "هل أنت متأكد أنك تريد حذف حسابك؟",
+          "NO": "لا",
+          "Are you sure you want to report this user?":
+              "هل أنت متأكد أنك تريد الإبلاغ عن هذا المستخدم؟",
+          "Report this user": "الإبلاغ عن هذا المستخدم",
+          "YES": "نعم",
+          "Are you sure you want to Block this user?":
+              "هل أنت متأكد أنك تريد حظر هذا المستخدم؟",
+          "Block this user": "منع هذا المستخدم",
+          "Report user": "أبلغ عن مستخدم",
+          "Select a reason below to report": "حدد سببًا أدناه للإبلاغ",
+          'Violent content': "محتوى عنيف",
+          "Resend": "إعادة إرسال",
+          "Don't get OTP?": "لا تحصل على OTP؟",
+          "CONTINUE": "يكمل",
+          "An authentication code has been sent to\n(+00) 999 999 999":
+              "تم إرسال رمز المصادقة إلى \ n (+00) 999999999",
+          "OTP Authentication": "مصادقة OTP",
+          "Privacy policy": "سياسة الخصوصية",
           'Message': 'رسالة',
           "Send": "يرسل",
           "Message here": "رسالة هنا",

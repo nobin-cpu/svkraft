@@ -1,26 +1,13 @@
-import 'dart:convert';
 
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
-import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sv_craft/Features/market_place/controller/category_controller.dart';
-import 'package:sv_craft/Features/market_place/view/categori_found_screen.dart';
 import 'package:sv_craft/Features/market_place/view/fillter_produtc.dart';
-import 'package:sv_craft/constant/api_link.dart';
-import 'package:sv_craft/constant/catagoriHttp.dart';
 
-import '../../../constant/color.dart';
-import '../../../main.dart';
-import '../../chat/view/recent_chats.dart';
-import '../../home/home_screen.dart';
+
 import '../../market_add_products/view/components/categoris_items_components.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:http/http.dart' as http;
-import 'dart:developer' as devlog;
 
-import '../../profile/view/profile_screen.dart';
-import 'bookmarked_product.dart';
 
 class FilterBoxScreen extends StatefulWidget {
   const FilterBoxScreen({Key? key}) : super(key: key);

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sv_craft/constant/constant.dart';
 
-import '../../constant/color.dart';
 import 'home_caroucel.dart';
 
 class ProductPage extends StatelessWidget {

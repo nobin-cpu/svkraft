@@ -136,40 +136,38 @@ class SpecialPostController extends GetxController {
       print("suscces:::::" + await response.stream.bytesToString());
       getSpecialRemainder();
       Get.back();
-      Future.delayed(Duration(seconds: 1), () {
-        textEditingController.value.clear();
-        imagepath.value = "https://svkraft.shop/reminders/default.jpg";
 
-        // Get.snackbar(
-        //         backgroundColor: Colors.green,
-        //         colorText: Colors.white,
-        //         "Special Day".tr,
-        //         "Record created successfully".tr)
+      textEditingController.value.clear();
+      imagepath.value = "https://svkraft.shop/reminders/default.jpg";
 
-        // var context;
-        // showDialog(context: context, builder: (BuildContext context) => AlertDialog(title: new Text('Message'),));
-        Get.defaultDialog(
-            title: "Special Day".tr,
-            middleText: "Record created successfully".tr,
-            backgroundColor: Appcolor.primaryColor,
-            titleStyle: TextStyle(color: Colors.white),
-            middleTextStyle: TextStyle(color: Colors.white),
-            radius: 30,
-            actions: [
-              Center(
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Colors.white),
-                    onPressed: () {
-                      Get.to(() => HomeScreen());
-                    },
-                    child: Text(
-                      "OK".tr,
-                      style: TextStyle(color: Colors.black),
-                    )),
-              )
-            ]);
-        ;
-      });
+      // Get.snackbar(
+      //         backgroundColor: Colors.green,
+      //         colorText: Colors.white,
+      //         "Special Day".tr,
+      //         "Record created successfully".tr)
+
+      // var context;
+      // showDialog(context: context, builder: (BuildContext context) => AlertDialog(title: new Text('Message'),));
+      Get.defaultDialog(
+          title: "Special Day".tr,
+          middleText: "Record created successfully".tr,
+          backgroundColor: Appcolor.primaryColor,
+          titleStyle: TextStyle(color: Colors.white),
+          middleTextStyle: TextStyle(color: Colors.white),
+          radius: 30,
+          actions: [
+            Center(
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(primary: Colors.white),
+                  onPressed: () {
+                    Get.to(() => HomeScreen());
+                  },
+                  child: Text(
+                    "OK".tr,
+                    style: TextStyle(color: Colors.black),
+                  )),
+            )
+          ]);
 
       getSpecialRemainder();
     } else {

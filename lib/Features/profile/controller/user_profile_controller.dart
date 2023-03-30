@@ -1,9 +1,14 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class UserProfileController extends GetxController {
+  
+  PermissionStatus _permissionStatus = PermissionStatus.denied;
+ 
   var imagePath = "null".obs;
   final _picker = ImagePicker();
   var dropdownValue = "Male".obs;
@@ -11,9 +16,11 @@ class UserProfileController extends GetxController {
   var dateController = TextEditingController().obs;
 
   Future<void> getImageFromMGallery() async {
+    
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
+
       imagePath.value = pickedFile.path;
       print(imagePath);
       update();

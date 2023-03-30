@@ -2,10 +2,8 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sv_craft/Features/cart/model/delete_item.dart';
-import 'package:sv_craft/Features/grocery/model/search_product_model.dart';
 
 import '../../../constant/api_link.dart';
-import '../../../services/services.dart';
 
 class CartItemDeleteController extends GetxController {
   Future<DeleteCartItem?> cartItemDelete(
@@ -21,7 +19,9 @@ class CartItemDeleteController extends GetxController {
 
       http.Response response = await http.get(Uri.parse(url), headers:headersForAuth);
       print(response.statusCode);
+      
       if (response.statusCode == 200) {
+       
         final marketSearch = deleteCartItemFromJson(response.body);
 
         // print('proooooooooooooooooooo ${marketSearch.data}');

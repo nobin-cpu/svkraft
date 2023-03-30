@@ -44,27 +44,33 @@ class CartSummaryData {
     required this.totalItem,
     required this.totalPrice,
     required this.shippingCharge,
+    required this.inTotal,
+
+
   });
 
   String totalItem;
   String totalPrice;
   String shippingCharge;
+  String inTotal;
 
   factory CartSummaryData.fromJson(Map<String, dynamic> json) =>
       CartSummaryData(
         totalItem: json["totalItem"],
         totalPrice: json["totalPrice"],
         shippingCharge: json["shippingCharge"],
+        inTotal: json["inTotal"],
       );
 
   Map<String, dynamic> toJson() => {
         "totalItem": totalItem,
         "totalPrice": totalPrice,
         "shippingCharge": shippingCharge,
+        "inTotal": inTotal,
       };
 
   @override
   String toString() {
-    return 'CartSummaryData{totalItem: $totalItem, totalPrice: $totalPrice, shippingCharge: $shippingCharge}';
+    return 'CartSummaryData{totalItem: $totalItem, totalPrice: $totalPrice, shippingCharge: $shippingCharge, inTotal: $inTotal}';
   }
 }

@@ -24,17 +24,7 @@ class _FilterSubCatogoryState extends State<FilterSubCatogory> {
   // Generate a massive list of dummy products
   final myProducts = List<String>.generate(10, (i) => 'category $i');
   var list = [];
-  // "Moviing",
-  // "Assembly",
-  // "Mounting",
-  // "rice",
-  // "Assistant",
-  // "Delivery",
-  // "pasta",
-  // "Practice",
-  // "Painting",
-  // "Cleaning",
-  // "Liffing"
+ 
 
   @override
   void initState() {
@@ -117,13 +107,7 @@ class _FilterSubCatogoryState extends State<FilterSubCatogory> {
               child: CircularProgressIndicator(),
             ),
 
-      // : Center(child: CircularProgressIndicator()),
-
-      // ListView.builder(
-      //     itemCount: myProducts.length,
-      //     itemBuilder: (context, index) {
-      //       return Text('$category ${myProducts[index]}');
-      //     }),
+      
     );
   }
 }

@@ -15,4 +15,10 @@ class Appurl {
   static const String locationinsignup = baseURL + "api/cities";
   static const String otpverify = baseURL + "api/otp-check";
   static const String help = baseURL + "api/support";
+  static const String callus = baseURL + "api/app/settings";
+  static const String ads = baseURL + "api/ads";
+  static const String totalsum = baseURL + "api/cart/summary";
+  static const String reportuser = baseURL + "api/reports";
+    static const String cartitem = baseURL + "api/cart/items/count";
+      static const String deleteaccount = baseURL + "api/user/destroy";
 }

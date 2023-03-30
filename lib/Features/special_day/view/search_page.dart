@@ -1,8 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:get/get.dart';
 import 'package:sv_craft/Features/special_day/controllar/search_con.dart';
 import 'package:sv_craft/Features/special_day/view/product_details.dart';
@@ -10,7 +9,6 @@ import 'package:sv_craft/Features/special_day/view/special_home_screen.dart';
 
 import '../../../constant/api_link.dart';
 import '../../../constant/color.dart';
-import '../../grocery/controllar/searched_product_con.dart';
 import '../../home/controller/home_controller.dart';
 import 'package:http/http.dart' as http;
 
@@ -130,7 +128,7 @@ class _SpecialSearchPageState extends State<SpecialSearchPage> {
                     gridDelegate:
                         const SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 200,
-                      childAspectRatio: .79,
+                      childAspectRatio: .75,
                       mainAxisSpacing: 5,
                       crossAxisSpacing: 5,
                     ),

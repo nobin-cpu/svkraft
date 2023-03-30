@@ -1,12 +1,15 @@
 import 'dart:convert';
 
+import 'package:badges/badges.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sv_craft/Features/cart/view/cart_screen.dart';
+
 import 'package:sv_craft/Features/home/home_screen.dart';
 import 'package:sv_craft/Features/market_place/controller/all_product_controller.dart';
 import 'package:sv_craft/Features/profile/view/profile_screen.dart';
@@ -23,20 +26,18 @@ import 'package:sv_craft/Features/special_day/view/specialdiscount.dart';
 import 'package:sv_craft/Features/special_day/view/widgets/alarm_system.dart';
 import 'package:sv_craft/app/constant/api_constant.dart';
 import 'package:sv_craft/app/module/shops/controller/slider_controller.dart';
-import 'package:sv_craft/common/post_model.dart';
+
 import 'package:sv_craft/constant/api_link.dart';
 import 'package:sv_craft/constant/shimmer_effects.dart';
-import 'package:sv_craft/main.dart';
-import 'package:sv_craft/splash_screen.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../constant/color.dart';
-import '../../../constant/constant.dart';
+
+import '../../grocery/controllar/cart_count.dart';
 import '../controllar/special_post_controller.dart';
 import 'widgets/category_card.dart';
-import 'widgets/special_drawer.dart';
 import 'package:http/http.dart' as http;
-import 'dart:developer' as devlog;
 
 class SpecialHomeScreen extends StatefulWidget {
   SpecialHomeScreen({Key? key}) : super(key: key);
@@ -46,6 +47,7 @@ class SpecialHomeScreen extends StatefulWidget {
 }
 
 class _SpecialHomeScreenState extends State<SpecialHomeScreen> {
+  Cartcontrollerofnav _cartControllers =Get.put(Cartcontrollerofnav());
   final sliderController = Get.put(SliderController());
 
   final AllProductController _allProductController =
@@ -64,18 +66,97 @@ class _SpecialHomeScreenState extends State<SpecialHomeScreen> {
   var SpecialOfferName;
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final TextEditingController titlecontroller = TextEditingController();
+  final TextEditingController messagecontroller = TextEditingController();
+  Future withdraw() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('auth-token');
 
+    Map<String, String> requestHeaders = {
+      'Accept': 'application/json',
+      'authorization': "Bearer $token"
+    };
+    var request = await http.MultipartRequest(
+      'POST',
+      Uri.parse(Appurl.help),
+    );
+    request.fields.addAll({
+      'subject': titlecontroller.text,
+      'message': messagecontroller.text,
+    });
+
+    // if (_image != null) {
+    //   request.files
+    //       .add(await http.MultipartFile.fromPath('attached_file', _image.path));
+    // }
+
+    request.headers.addAll(requestHeaders);
+
+    request.send().then((result) async {
+      http.Response.fromStream(result).then((response) {
+        if (response.statusCode == 200) {
+          var data = jsonDecode(response.body);
+          print(titlecontroller.text);
+          titlecontroller.clear();
+          messagecontroller.clear();
+          // saveprefs(data["token"]);
+          // chat.clear();
+          Get.back();
+          setState(() {});
+        } else {
+          // print(title);
+          print(response.body.toString());
+          // Fluttertoast.showToast(
+          //     msg: "Error Occured",
+          //     toastLength: Toast.LENGTH_LONG,
+          //     gravity: ToastGravity.BOTTOM,
+          //     timeInSecForIosWeb: 1,
+          //     backgroundColor: Colors.red,
+          //     textColor: Colors.white,
+          //     fontSize: 16.0);
+          return response.body;
+        }
+      });
+    });
+  }
+
+  saveprefs(String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('auth-token', token);
+  }
+
+  Future carts() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('auth-token');
+
+    Map<String, String> requestHeaders = {
+      'Accept': 'application/json',
+      'authorization': "Bearer $token"
+    };
+
+    var response =
+        await http.get(Uri.parse(Appurl.cartitem), headers: requestHeaders);
+    if (response.statusCode == 200) {
+      print('Get post collected' + response.body);
+      var userData10 = jsonDecode(response.body)['count'];
+
+      return userData10;
+    } else {
+      print("post have no Data${response.body}");
+    }
+  }
+
+  Future? cartcount;
   var tokenp;
   @override
   void initState() {
     super.initState();
-    
+    cartcount = carts();
+
     specialPostController.getSpecialRemainder();
     Future.delayed(Duration.zero, () async {
       setTokenToVariable();
-    }); //.then((value) => _allProductController.GetAllProduct(tokenp))
-
-    // fetchUser();
+    });
   }
 
   Future<void> setTokenToVariable() async {
@@ -108,27 +189,6 @@ class _SpecialHomeScreenState extends State<SpecialHomeScreen> {
     'Japanese Vocabulary'
   ];
 
-  // List userImage = [];
-
-  // Future fetchUser() async {
-  //   var url = Appurl.baseURL + "api/sliders";
-
-  //   http.Response response = await http.get(Uri.parse(url), headers: {
-  //     'Content-Type': 'application/json',
-  //     'Accept': 'application/json',
-  //     'Authorization': 'Bearer L5CyOCbcsG827tJNMBN3FC3fvBK5UoHufM1GGg2i',
-  //   });
-  //   setState(() {
-  //     var decode = jsonDecode(response.body);
-
-  //     List userData = decode['data'];
-  //     for (var i = 0; i < userData.length; i++) {
-  //       userImage = userData.length as List;
-  //       // userImage = userData.length as List;
-  //       print(userImage);
-  //     }
-  //   });
-  // }
   bool isLoading = false;
   @override
   Widget _searchTextField() {
@@ -416,6 +476,7 @@ class _SpecialHomeScreenState extends State<SpecialHomeScreen> {
                               ),
                               SizedBox(height: 8),
                               TextFormField(
+                                controller: titlecontroller,
                                 decoration: InputDecoration(
                                   border: UnderlineInputBorder(),
                                   labelText: 'Title'.tr,
@@ -423,6 +484,7 @@ class _SpecialHomeScreenState extends State<SpecialHomeScreen> {
                               ),
                               SizedBox(height: 10),
                               TextFormField(
+                                controller: messagecontroller,
                                 maxLength: 556,
                                 keyboardType: TextInputType.multiline,
                                 maxLines: 6,
@@ -440,11 +502,14 @@ class _SpecialHomeScreenState extends State<SpecialHomeScreen> {
                                         borderSide: BorderSide(
                                             color: Color.fromARGB(
                                                 255, 66, 125, 145))),
-                                    hintText: "Message here"),
+                                    hintText: "Message here".tr),
                               ),
                               SizedBox(height: 10),
                               ElevatedButton(
-                                  onPressed: () {}, child: Text("Send"))
+                                  onPressed: () {
+                                    withdraw();
+                                  },
+                                  child: Text("Send".tr))
                             ],
                           ),
                         )),
@@ -491,22 +556,6 @@ class _SpecialHomeScreenState extends State<SpecialHomeScreen> {
           // automaticallyImplyLeading: false,
           backgroundColor: Appcolor.primaryColor,
           elevation: 1,
-          leading: Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                icon: Icon(
-                  Icons.menu,
-                  color: Appcolor.iconColor,
-                  size: 20,
-                  // size: 44, // Changing Drawer Icon Size
-                ),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-              );
-            },
-          ),
           centerTitle: true,
 
           title: !_searchBoolean
@@ -576,33 +625,6 @@ class _SpecialHomeScreenState extends State<SpecialHomeScreen> {
             : SingleChildScrollView(
                 child: Column(
                   children: [
-                    // Container(
-                    //   //padding: const EdgeInsets.all(5),
-                    //   alignment: Alignment.center,
-                    //   decoration: BoxDecoration(
-                    //     color: Colors.white,
-                    //     borderRadius: BorderRadius.circular(0),
-                    //     boxShadow: const [
-                    //       BoxShadow(
-                    //         color: Colors.black12, //color of shadow
-                    //         spreadRadius: 1, //spread radius
-                    //         blurRadius: 0, // blur radius
-                    //         offset: Offset(0, 1), // changes position of shadow
-                    //         //first paramerter of offset is left-right
-                    //         //second parameter is top to down
-                    //       )
-                    //     ],
-                    //   ),
-                    //   width: size.width,
-                    //   height: size.height * .3,
-                    //   child: Image.asset(
-                    //     'images/specialhome.png',
-                    //     fit: BoxFit.cover,
-                    //     width: size.width,
-                    //     height: size.height * .3,
-                    //   ),
-                    // ),
-
                     sliderController.isLoading == true
                         ? Center(child: CircularProgressIndicator())
                         : CarouselSlider.builder(
@@ -665,7 +687,8 @@ class _SpecialHomeScreenState extends State<SpecialHomeScreen> {
                               } else {
                                 final data = snapshot.data;
 
-                                return GridView.builder(
+                                return 
+                                GridView.builder(
                                   physics: const NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   gridDelegate:
@@ -918,8 +941,19 @@ class _SpecialHomeScreenState extends State<SpecialHomeScreen> {
               activeColor: Colors.white,
             ),
             BottomNavyBarItem(
-                icon: Icon(Icons.shopping_cart),
-                title: Text('Cart'.tr),
+                icon:Obx(
+                      () => Badge(
+                    position: BadgePosition.topEnd(),
+                    badgeContent: Container(
+                      child: Text(
+                        _cartControllers.count.value.toString() ,
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    child: Icon(Icons.shopping_cart_outlined),
+                  ),
+                ) ,
+                title: Text("Cart Screen".tr),
                 activeColor: Colors.white),
             BottomNavyBarItem(
                 icon: Icon(Icons.favorite),

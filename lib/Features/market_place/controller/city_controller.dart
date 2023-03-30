@@ -1,7 +1,5 @@
 import 'package:get/get.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:sv_craft/Features/market_place/model/market_category.dart';
 import 'package:sv_craft/Features/market_place/model/market_city_model.dart';
 
 import '../../../constant/api_link.dart';

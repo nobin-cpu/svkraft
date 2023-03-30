@@ -140,6 +140,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                                           color: Colors.green,
                                         ),
                                         onPressed: () {
+                                          setState(() {});
                                           specialPostController
                                               .postSpecialCard();
                                         },

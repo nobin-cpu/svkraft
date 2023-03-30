@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:sv_craft/Features/grocery/model/filter_product_model.dart';
-import 'package:sv_craft/Features/grocery/model/search_product_model.dart';
 
 import '../../../constant/api_link.dart';
 import '../../../services/services.dart';
