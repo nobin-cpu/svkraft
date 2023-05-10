@@ -8,12 +8,15 @@ import 'package:sv_craft/Features/bookmarks/controller/add_to_bookmarks_con.dart
 import 'package:sv_craft/Features/grocery/controllar/bookmark_add_product.dart';
 import 'package:sv_craft/Features/grocery/controllar/bookmark_category_con.dart';
 import 'package:sv_craft/Features/grocery/view/grocery_product.dart';
+import 'package:sv_craft/Features/grocery/view/see_all_details.dart';
 import 'package:sv_craft/Features/grocery/view/see_all_products.dart';
 import 'package:sv_craft/Features/home/controller/home_controller.dart';
+import 'package:sv_craft/Features/special_day/view/widgets/special_drawer.dart';
 import 'package:sv_craft/constant/api_link.dart';
 
 class GroceryDetails extends StatefulWidget {
   final String Id;
+
   const GroceryDetails({super.key, required this.Id});
 
   @override
@@ -96,10 +99,8 @@ class _GroceryDetailsState extends State<GroceryDetails> {
                           return Column(
                             children: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-
                                   Padding(
                                     padding: EdgeInsets.all(10),
                                     child: Text(
@@ -339,6 +340,30 @@ class _GroceryDetailsState extends State<GroceryDetails> {
                                                         //               ["product_id"]
                                                         //           .toString(),
                                                         //     ));
+                                                        Get.to(() => Seedetails(
+                                                          description: snapshot
+                                                                  .data[index]
+                                                                      ["lists"]
+                                                                      [index2]
+                                                                      ["description"]
+                                                                  .toString(),
+                                                            title: snapshot
+                                                                .data[index]["lists"]
+                                                                    [index2]
+                                                                    ["name"]
+                                                                .toString(),
+                                                            id: snapshot.data[index]
+                                                                    ["lists"][index2]
+                                                                    ["id"]
+                                                                .toString(),
+                                                            image: snapshot
+                                                                .data[index]["lists"]
+                                                                    [index2]
+                                                                    ["image"]
+                                                                .toString(),
+                                                            price: snapshot.data[index]["lists"][index2]["price"].toString(),
+                                                            token: tokenp,
+                                                            prices: snapshot.data[index]["lists"][index2]["market_price"].toString()));
                                                       },
                                                       child: Center(
                                                         child: Stack(
@@ -441,12 +466,23 @@ class _GroceryDetailsState extends State<GroceryDetails> {
                                                             CrossAxisAlignment
                                                                 .start,
                                                         children: [
-                                                          Text(snapshot
-                                                              .data[index]
-                                                                  ["lists"]
-                                                                  [index2]
-                                                                  ["name"]
-                                                              .toString()),
+                                                          Container(
+                                                            height:
+                                                                size.height *
+                                                                    .035,
+                                                            width: size.width *
+                                                                .38,
+                                                            child: FittedBox(
+                                                              fit: BoxFit
+                                                                  .contain,
+                                                              child: Text(snapshot
+                                                                  .data[index]
+                                                                      ["lists"]
+                                                                      [index2]
+                                                                      ["name"]
+                                                                  .toString()),
+                                                            ),
+                                                          ),
                                                           Text(
                                                             snapshot.data[index]
                                                                         [
@@ -493,43 +529,47 @@ class _GroceryDetailsState extends State<GroceryDetails> {
                                         ),
                                       );
                                     }),
-                              )
-                            ,  Padding(
-                                padding: EdgeInsets.only(
-
-                                    top: size.height * .019),
+                              ),
+                              Padding(
+                                padding:
+                                    EdgeInsets.only(top: size.height * .019),
                                 child: GestureDetector(
                                   onTap: () {
                                     Get.to(SeeAllProductsScreen(
                                       title: snapshot.data[index]["title"],
-                                      id: snapshot.data[index]["id"]
-                                          .toString(),
+                                      id: snapshot.data[index]["id"].toString(),
+                                      decription: snapshot
+                                                                  .data[index]
+                                                                      ["lists"]
+                                                                      [index]
+                                                                      ["description"]
+                                                                  .toString(),
+
                                     ));
                                   },
                                   child:
-                                  // Text(
-                                  //   "View All".tr,
-                                  //   style: TextStyle(
-                                  //     color: Colors.black,
-                                  //     shadows: [
-                                  //       Shadow(
-                                  //           color: Colors
-                                  //               .transparent,
-                                  //           offset: Offset(0, -5))
-                                  //     ],
-                                  //     fontWeight: FontWeight.bold,
-                                  //     decoration: TextDecoration
-                                  //         .underline,
-                                  //     decorationThickness: 3,
-                                  //   ),
-                                  // ),
-                                  Container(
+                                      // Text(
+                                      //   "View All".tr,
+                                      //   style: TextStyle(
+                                      //     color: Colors.black,
+                                      //     shadows: [
+                                      //       Shadow(
+                                      //           color: Colors
+                                      //               .transparent,
+                                      //           offset: Offset(0, -5))
+                                      //     ],
+                                      //     fontWeight: FontWeight.bold,
+                                      //     decoration: TextDecoration
+                                      //         .underline,
+                                      //     decorationThickness: 3,
+                                      //   ),
+                                      // ),
+                                      Container(
                                     height: size.height * .068,
                                     width: size.width * .25,
                                     decoration: BoxDecoration(
                                         color: Colors.red,
-                                        borderRadius: BorderRadius.circular(2)
-                                    ),
+                                        borderRadius: BorderRadius.circular(2)),
                                     child: Padding(
                                       padding: EdgeInsets.only(
                                           left: 8.0, right: 8.0),
@@ -545,11 +585,7 @@ class _GroceryDetailsState extends State<GroceryDetails> {
                                               // Step 3 SEE HERE
 
                                               decorationColor:
-                                              Color.fromARGB(
-                                                  255,
-                                                  0,
-                                                  0,
-                                                  0),
+                                                  Color.fromARGB(255, 0, 0, 0),
                                             ),
                                           ),
                                         ),

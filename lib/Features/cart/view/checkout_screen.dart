@@ -130,6 +130,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               elevation: 0,
               centerTitle: true,
               title: Text("SV_Kraft".tr),
+              leading: IconButton(
+                  onPressed: () {
+                    Get.to(() => HomeScreen());
+                  },
+                  icon: Icon(Icons.arrow_back_ios)),
             ),
             body: Address != null && CartSummary != null
                 ? SingleChildScrollView(
@@ -210,15 +215,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                         ),
                                         const SizedBox(width: 6),
                                         Container(
-                                          width: size.width * 0.7,
+                                          width: size.width * 0.59,
                                           child: isNoData == null
                                               ? Container()
                                               : Text(
-                                                  '${Address!.house}, ${Address!.colony}, ${Address!.city}, ${Address!.area}, ${Address!.address}',
+                                                  '  ${Address!.address}',
                                                   style: const TextStyle(
                                                       fontSize: 16),
                                                 ),
                                         ),
+                                        IconButton(
+                                            onPressed: () {
+                                              Get.to(() => AddressScreen());
+                                            },
+                                            icon: Icon(Icons.add))
                                       ],
                                     ),
                                     const SizedBox(
@@ -270,99 +280,99 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 ),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  color: Colors.white,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: FutureBuilder(
-                                      future: viewall_experience!,
-                                      builder: (context, snapshot) {
-                                        shots = (snapshot.data ?? []) as List;
-                                        return snapshot.hasData
-                                            ? shots != null
-                                                ? Container(
-                                                    child: new DropdownButton<
-                                                        String>(
-                                                      value: loc,
-                                                      isExpanded:
-                                                          true, //Add this property
+                            // Padding(
+                            //   padding: const EdgeInsets.all(8.0),
+                            //   child: Container(
+                            //     width: double.infinity,
+                            //     decoration: BoxDecoration(
+                            //       borderRadius: BorderRadius.circular(10.0),
+                            //       color: Colors.white,
+                            //     ),
+                            //     child: Padding(
+                            //       padding: const EdgeInsets.only(left: 8.0),
+                            //       child: FutureBuilder(
+                            //           future: viewall_experience!,
+                            //           builder: (context, snapshot) {
+                            //             shots = (snapshot.data ?? []) as List;
+                            //             return snapshot.hasData
+                            //                 ? shots != null
+                            //                     ? Container(
+                            //                         child: new DropdownButton<
+                            //                             String>(
+                            //                           value: loc,
+                            //                           isExpanded:
+                            //                               true, //Add this property
 
-                                                      hint: loc == null
-                                                          ? Text(
-                                                              "Enter address"
-                                                                  .tr,
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  fontSize: 14,
-                                                                  color: Appcolor
-                                                                      .primaryColor))
-                                                          : Text(c_name!,
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  fontSize: 14,
-                                                                  color: Appcolor
-                                                                      .primaryColor)),
-                                                      items: shots
-                                                          .map<
-                                                              DropdownMenuItem<
-                                                                  String>>((value) =>
-                                                              new DropdownMenuItem<
-                                                                  String>(
-                                                                value: value[
-                                                                            "id"]
-                                                                        .toString() +
-                                                                    "_" +
-                                                                    value[
-                                                                        'name'],
-                                                                child: new Text(
-                                                                  value['name'],
-                                                                  style: TextStyle(
-                                                                      color: Appcolor
-                                                                          .primaryColor),
-                                                                ),
-                                                              ))
-                                                          .toList(),
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          loc = value;
-                                                          val = loc!.split('_');
-                                                          print(val[0] +
-                                                              " NEw value");
-                                                          print(val[1] +
-                                                              " class value");
-                                                          c_name = val[1];
-                                                          location = val[1];
-                                                          viewall_experience =
-                                                              locationsss();
-                                                        });
-                                                        // print(_mySelection);
-                                                        print(location);
-                                                      },
-                                                      underline:
-                                                          DropdownButtonHideUnderline(
-                                                              child:
-                                                                  Container()),
-                                                    ),
-                                                  )
-                                                : SpinKitThreeInOut(
-                                                    color: Colors.white,
-                                                    size: 10,
-                                                  )
-                                            : Container();
-                                      }),
-                                ),
-                              ),
-                            ),
+                            //                           hint: loc == null
+                            //                               ? Text(
+                            //                                   "Enter address"
+                            //                                       .tr,
+                            //                                   style: TextStyle(
+                            //                                       fontWeight:
+                            //                                           FontWeight
+                            //                                               .bold,
+                            //                                       fontSize: 14,
+                            //                                       color: Appcolor
+                            //                                           .primaryColor))
+                            //                               : Text(c_name!,
+                            //                                   style: TextStyle(
+                            //                                       fontWeight:
+                            //                                           FontWeight
+                            //                                               .bold,
+                            //                                       fontSize: 14,
+                            //                                       color: Appcolor
+                            //                                           .primaryColor)),
+                            //                           items: shots
+                            //                               .map<
+                            //                                   DropdownMenuItem<
+                            //                                       String>>((value) =>
+                            //                                   new DropdownMenuItem<
+                            //                                       String>(
+                            //                                     value: value[
+                            //                                                 "id"]
+                            //                                             .toString() +
+                            //                                         "_" +
+                            //                                         value[
+                            //                                             'name'],
+                            //                                     child: new Text(
+                            //                                       value['name'],
+                            //                                       style: TextStyle(
+                            //                                           color: Appcolor
+                            //                                               .primaryColor),
+                            //                                     ),
+                            //                                   ))
+                            //                               .toList(),
+                            //                           onChanged: (value) {
+                            //                             setState(() {
+                            //                               loc = value;
+                            //                               val = loc!.split('_');
+                            //                               print(val[0] +
+                            //                                   " NEw value");
+                            //                               print(val[1] +
+                            //                                   " class value");
+                            //                               c_name = val[1];
+                            //                               location = val[1];
+                            //                               viewall_experience =
+                            //                                   locationsss();
+                            //                             });
+                            //                             // print(_mySelection);
+                            //                             print(location);
+                            //                           },
+                            //                           underline:
+                            //                               DropdownButtonHideUnderline(
+                            //                                   child:
+                            //                                       Container()),
+                            //                         ),
+                            //                       )
+                            //                     : SpinKitThreeInOut(
+                            //                         color: Colors.white,
+                            //                         size: 10,
+                            //                       )
+                            //                 : Container();
+                            //           }),
+                            //     ),
+                            //   ),
+                            // ),
 
                             const SizedBox(
                               height: 30,
@@ -583,7 +593,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                                         address:
                                                             deliveryAddressController
                                                                     .text +
-                                                                loc);
+                                                                Address
+                                                                    .address);
 
                                             if (status == 200) {
                                               showDialog(
@@ -706,7 +717,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                                   _homeController.tokenGlobal,
                                               address: deliveryAddressController
                                                       .text +
-                                                  loc,
+                                                  Address.address,
                                             );
 
                                             if (status == 200) {

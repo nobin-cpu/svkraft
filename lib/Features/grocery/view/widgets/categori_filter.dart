@@ -241,6 +241,7 @@ class _CategoriFilterState extends State<CategoriFilter> {
                 getProductbyId(groceryAllProduct.data[index].id.toString());
                 setState(() {
                   Get.to(GroceryDetails(
+                    
                     Id: groceryAllProduct.data[index].id.toString(),
                   ));
                 });

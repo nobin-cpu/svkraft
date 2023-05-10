@@ -21,4 +21,5 @@ class Appurl {
   static const String reportuser = baseURL + "api/reports";
     static const String cartitem = baseURL + "api/cart/items/count";
       static const String deleteaccount = baseURL + "api/user/destroy";
+       static const String groceryrelated = baseURL + "api/groceries/related-items";
 }

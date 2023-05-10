@@ -21,6 +21,7 @@ import 'package:sv_craft/Features/grocery/model/all_product_model.dart';
 import 'package:sv_craft/Features/grocery/model/sub_item_model.dart';
 import 'package:sv_craft/Features/grocery/view/bookmarks_screen.dart';
 import 'package:sv_craft/Features/grocery/view/grocery_search_page.dart';
+import 'package:sv_craft/Features/grocery/view/see_all_details.dart';
 
 import 'package:sv_craft/Features/grocery/view/see_all_products.dart';
 import 'package:sv_craft/Features/grocery/view/widgets/categori_filter.dart';
@@ -1338,21 +1339,44 @@ class _GroceryProductState extends State<GroceryProduct> {
                                                                     horizontal:
                                                                         10,
                                                                   ),
-                                                                  child: Image
-                                                                      .network(
-                                                                    // Appurl.baseURL+'${data[index].image}' ??
-                                                                    Appurl.baseURL +
-                                                                        '${subProduct.image}',
-                                                                    fit: BoxFit
-                                                                        .cover,
-                                                                    width: MediaQuery.of(context)
-                                                                            .size
-                                                                            .width *
-                                                                        .43,
-                                                                    height: MediaQuery.of(context)
-                                                                            .size
-                                                                            .height *
-                                                                        .16,
+                                                                  child:
+                                                                      InkWell(
+                                                                    onTap: () {
+                                                                      Get.to(() => Seedetails(
+                                                                          description: subProduct
+                                                                              .description,
+                                                                          title: subProduct
+                                                                              .name,
+                                                                          id: subProduct
+                                                                              .id
+                                                                              .toString(),
+                                                                          image: subProduct
+                                                                              .image,
+                                                                          price: subProduct
+                                                                              .price
+                                                                              .toString(),
+                                                                          token:
+                                                                              tokenp,
+                                                                          prices: subProduct
+                                                                              .pricee
+                                                                              .toString()));
+                                                                    },
+                                                                    child: Image
+                                                                        .network(
+                                                                      // Appurl.baseURL+'${data[index].image}' ??
+                                                                      Appurl.baseURL +
+                                                                          '${subProduct.image}',
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                      width: MediaQuery.of(context)
+                                                                              .size
+                                                                              .width *
+                                                                          .43,
+                                                                      height: MediaQuery.of(context)
+                                                                              .size
+                                                                              .height *
+                                                                          .16,
+                                                                    ),
                                                                   ),
                                                                 ),
                                                                 subProduct.offPrice ==
@@ -1505,8 +1529,9 @@ class _GroceryProductState extends State<GroceryProduct> {
                                                   width: size.width * .25,
                                                   decoration: BoxDecoration(
                                                       color: Colors.red,
-                                                    borderRadius: BorderRadius.circular(2)
-                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              2)),
                                                   child: Padding(
                                                     padding: EdgeInsets.only(
                                                         left: 8.0, right: 8.0),

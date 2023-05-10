@@ -53,7 +53,7 @@ android {
         applicationId "com.svkraft.com"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 27
+        versionCode 28
         versionName flutterVersionName
     }
 

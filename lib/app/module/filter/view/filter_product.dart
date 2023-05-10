@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sv_craft/Features/market_place/view/chatlist.dart';
 import 'package:sv_craft/Features/market_place/view/details.dart';
 import 'package:sv_craft/app/module/filter/controller/filter_product_con.dart';
 import 'package:sv_craft/constant/api_link.dart';
@@ -329,10 +330,7 @@ class _FilterProductsState extends State<FilterProducts> {
               MaterialPageRoute(builder: (context) => const HomeScreen()),
             );
           } else if (_selectedIndex == 1) {
-            // Navigator.pushReplacement(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => RecentChats()),
-            // );
+            Get.to(() => Chatlist());
           } else if (_selectedIndex == 2) {
             // Navigator.pushReplacement(
             //   context,
@@ -381,13 +379,6 @@ class _FilterProductsState extends State<FilterProducts> {
               title: const Text('Profile'),
               activeColor: Colors.white),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
       ),
     );
   }

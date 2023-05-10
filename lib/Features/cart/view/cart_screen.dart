@@ -219,124 +219,128 @@ class _CartScreenState extends State<CartScreen> {
                                                             const EdgeInsets
                                                                     .symmetric(
                                                                 vertical: 8),
-                                                        child: Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .end,
-                                                          children: [
-                                                            SizedBox(
-                                                              height: 50,
-                                                              width: 70,
-                                                              // color: Colors.redAccent,
-                                                              child:
-                                                                  Image.network(
-                                                                '${Appurl.baseURL}${cartData.grocery[index].image}',
-                                                                fit: BoxFit
-                                                                    .cover,
+                                                        child: SizedBox(
+                                                          child: Row(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .end,
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 50,
+                                                                width: 70,
+                                                                // color: Colors.redAccent,
+                                                                child: Image
+                                                                    .network(
+                                                                  '${Appurl.baseURL}${cartData.grocery[index].image}',
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
                                                               ),
-                                                            ),
-                                                            cartCardDesing(
-                                                                size,
-                                                                index,
-                                                                singleGroceryPrice),
-                                                            GestureDetector(
-                                                              onTap: () async {
-                                                                if (cartData
-                                                                        .grocery
-                                                                        .length ==
-                                                                    1) {
-                                                                  var responce =
-                                                                      await _cartItemDeleteController
-                                                                          .cartItemDelete(
-                                                                    _homeController
-                                                                        .tokenGlobal,
-                                                                    _homeController
-                                                                        .userId,
-                                                                    cartData
-                                                                        .grocery[
-                                                                            index]
-                                                                        .id,
-                                                                    'grocery',
-                                                                  );
+                                                              cartCardDesing(
+                                                                  size,
+                                                                  index,
+                                                                  singleGroceryPrice),
+                                                              GestureDetector(
+                                                                onTap:
+                                                                    () async {
+                                                                  if (cartData
+                                                                          .grocery
+                                                                          .length ==
+                                                                      1) {
+                                                                    var responce =
+                                                                        await _cartItemDeleteController
+                                                                            .cartItemDelete(
+                                                                      _homeController
+                                                                          .tokenGlobal,
+                                                                      _homeController
+                                                                          .userId,
+                                                                      cartData
+                                                                          .grocery[
+                                                                              index]
+                                                                          .id,
+                                                                      'grocery',
+                                                                    );
 
-                                                                  if (responce !=
-                                                                      null) {
+                                                                    if (responce !=
+                                                                        null) {
+                                                                      setState(
+                                                                          () {
+                                                                        setTokenToVariable();
+                                                                      });
+
+                                                                      print(
+                                                                          "Item deleted");
+                                                                      _cartControllers
+                                                                          .onInit();
+                                                                    } else {
+                                                                      setState(
+                                                                          () {});
+                                                                      print(
+                                                                          "Item not deleted");
+                                                                    }
                                                                     setState(
                                                                         () {
-                                                                      setTokenToVariable();
+                                                                      cartData
+                                                                          .grocery
+                                                                          .length = 0;
                                                                     });
-
-                                                                    print(
-                                                                        "Item deleted");
-                                                                    _cartControllers
-                                                                        .onInit();
                                                                   } else {
+                                                                    var responce =
+                                                                        await _cartItemDeleteController
+                                                                            .cartItemDelete(
+                                                                      _homeController
+                                                                          .tokenGlobal,
+                                                                      _homeController
+                                                                          .userId,
+                                                                      cartData
+                                                                          .grocery[
+                                                                              index]
+                                                                          .id,
+                                                                      'grocery',
+                                                                    );
+
+                                                                    if (responce !=
+                                                                        null) {
+                                                                      setState(
+                                                                          () {
+                                                                        setTokenToVariable();
+                                                                      });
+
+                                                                      print(
+                                                                          "Item deleted");
+                                                                      _cartControllers
+                                                                          .onInit();
+                                                                    } else {
+                                                                      setState(
+                                                                          () {});
+                                                                      print(
+                                                                          "Item not deleted");
+                                                                    }
                                                                     setState(
                                                                         () {});
-                                                                    print(
-                                                                        "Item not deleted");
                                                                   }
-                                                                  setState(() {
-                                                                    cartData
-                                                                        .grocery
-                                                                        .length = 0;
-                                                                  });
-                                                                } else {
-                                                                  var responce =
-                                                                      await _cartItemDeleteController
-                                                                          .cartItemDelete(
-                                                                    _homeController
-                                                                        .tokenGlobal,
-                                                                    _homeController
-                                                                        .userId,
-                                                                    cartData
-                                                                        .grocery[
-                                                                            index]
-                                                                        .id,
-                                                                    'grocery',
-                                                                  );
-
-                                                                  if (responce !=
-                                                                      null) {
-                                                                    setState(
-                                                                        () {
-                                                                      setTokenToVariable();
-                                                                    });
-
-                                                                    print(
-                                                                        "Item deleted");
-                                                                    _cartControllers
-                                                                        .onInit();
-                                                                  } else {
-                                                                    setState(
-                                                                        () {});
-                                                                    print(
-                                                                        "Item not deleted");
-                                                                  }
-                                                                  setState(
-                                                                      () {});
-                                                                }
-                                                              },
-                                                              child:
-                                                                  const SizedBox(
-                                                                child: Padding(
-                                                                  padding:
-                                                                      EdgeInsets
-                                                                          .all(
-                                                                              8.0),
-                                                                  child: Icon(
-                                                                    Icons
-                                                                        .delete_outline_outlined,
-                                                                    color: Colors
-                                                                        .deepPurple,
+                                                                },
+                                                                child:
+                                                                    const SizedBox(
+                                                                  child:
+                                                                      Padding(
+                                                                    padding:
+                                                                        EdgeInsets.all(
+                                                                            8.0),
+                                                                    child: Icon(
+                                                                      Icons
+                                                                          .delete_outline_outlined,
+                                                                      color: Colors
+                                                                          .deepPurple,
+                                                                    ),
                                                                   ),
                                                                 ),
                                                               ),
-                                                            ),
-                                                            cartCountMEthod(
-                                                                index,
-                                                                singleGroceryPrice),
-                                                          ],
+                                                              cartCountMEthod(
+                                                                  index,
+                                                                  singleGroceryPrice),
+                                                            ],
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
@@ -625,7 +629,7 @@ class _CartScreenState extends State<CartScreen> {
                                                                   height: 100,
                                                                   width:
                                                                       size.width /
-                                                                          4,
+                                                                          5,
                                                                   // color: Colors.blue,
                                                                   child: Column(
                                                                     mainAxisAlignment:
@@ -902,7 +906,7 @@ class _CartScreenState extends State<CartScreen> {
                     margin: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 16),
                     width: MediaQuery.of(context).size.width,
-                    height: 45,
+                    height: 50,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -1100,13 +1104,15 @@ class _CartScreenState extends State<CartScreen> {
         padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              cartData.grocery[index].name,
-              style: const TextStyle(fontSize: 14, color: Colors.black54),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+            FittedBox(
+              fit: BoxFit.contain,
+              child: Text(
+                cartData.grocery[index].name,
+                style: const TextStyle(fontSize: 14, color: Colors.black54),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             Text(
               "price".tr +

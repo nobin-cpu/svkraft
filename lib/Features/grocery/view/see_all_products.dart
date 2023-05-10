@@ -3,6 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:sv_craft/Features/grocery/controllar/category_controller.dart';
+import 'package:sv_craft/Features/grocery/view/see_all_details.dart';
 import 'package:sv_craft/Features/grocery/view/widgets/grocery_count.dart';
 import 'package:sv_craft/constant/api_link.dart';
 import 'package:sv_craft/constant/color.dart';
@@ -16,7 +17,10 @@ import 'grocery_product.dart';
 class SeeAllProductsScreen extends StatefulWidget {
   final String title;
   final String id;
-  SeeAllProductsScreen({super.key, required this.title, required this.id});
+  final decription;
+
+  SeeAllProductsScreen(
+      {super.key, required this.title, required this.id, this.decription, });
 
   @override
   State<SeeAllProductsScreen> createState() => _SeeAllProductsScreenState();
@@ -38,6 +42,7 @@ class _SeeAllProductsScreenState extends State<SeeAllProductsScreen> {
     groceryCategoryController.getSeeAllProducts(widget.id);
   }
 
+  var tokenp;
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -321,13 +326,26 @@ class _SeeAllProductsScreenState extends State<SeeAllProductsScreen> {
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 10,
                                 ),
-                                child: Image.network(
-                                  // Appurl.baseURL+'${data[index].image}' ??
-                                  Appurl.baseURL + '${items.image}',
-                                  fit: BoxFit.cover,
-                                  width: 140,
-                                  height:
-                                      MediaQuery.of(context).size.height * .13,
+                                child: InkWell(
+                                  onTap: () {
+                                    Get.to(() => Seedetails(
+                                          title: items.name,
+                                          id: items.id.toString(),
+                                          image: items.image,
+                                          price: items.ar_pricee.toString(),
+                                          token: tokenp,
+                                          prices: items.marketPrice,
+                                          description: widget.decription,
+                                        ));
+                                  },
+                                  child: Image.network(
+                                    // Appurl.baseURL+'${data[index].image}' ??
+                                    Appurl.baseURL + '${items.image}',
+                                    fit: BoxFit.cover,
+                                    width: 140,
+                                    height: MediaQuery.of(context).size.height *
+                                        .13,
+                                  ),
                                 ),
                               ),
                               items.ar_off_price == "٠"
@@ -360,14 +378,21 @@ class _SeeAllProductsScreenState extends State<SeeAllProductsScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    items.name,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
+                                  Container(
+                                    height: size.height * .035,
+                                    width: size.width * .35,
+                                    child: FittedBox(
+                                      fit: BoxFit.contain,
+                                      child: Text(
+                                        items.name,
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black,
+                                        ),
+                                        textAlign: TextAlign.start,
+                                      ),
                                     ),
-                                    textAlign: TextAlign.start,
                                   ),
                                   Text(
                                     "${(items.ar_pricee)} " + "kr".tr,

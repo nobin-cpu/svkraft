@@ -10,7 +10,7 @@ import '../../controllar/cart_count.dart';
 class GroceryCount extends StatefulWidget {
   const GroceryCount({
     Key? key,
-    required this.index,
+     required this.index,
     required this.productId,
     required this.price,
   }) : super(key: key);

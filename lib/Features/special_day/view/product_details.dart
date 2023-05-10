@@ -194,7 +194,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                 } else {
                   final data = snapshot.data;
                   // print('Print from builder $data ');
-                  return SingleChildScrollView(
+                  return 
+                  SingleChildScrollView(
                     child: Column(
                       children: [
                         Container(
